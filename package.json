@@ -6,9 +6,12 @@
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
+    "install": "^0.8.1",
     "react": "15.2.0",
-    "react-native": "0.28.0",
+    "react-native": "^0.29.0",
+    "react-native-autocomplete": "^0.1.4",
     "react-native-swiper": "^1.4.6",
-    "react-native-tab-navigator": "^0.3.2"
+    "react-native-tab-navigator": "^0.3.2",
+    "tcomb-form-native": "^0.5.1"
   }
 }

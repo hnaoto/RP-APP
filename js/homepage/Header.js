@@ -8,14 +8,39 @@ import {
   View,
   Image,
   TextInput,
+  AlertIOS,
+  NavigatorIOS,
 } from 'react-native';
 
 
-var SearchBar = require('SearchBar');
+import SearchBar from './SearchBar';
 
 
 export default class Header extends Component {
+
+  constructor(props){
+	super(props);
+	this.state = {
+		focusHanlder: React.PropTypes.func
+	};
+  }
+	
+
+
+	
+	_handleFocus(event){
+	
+		this.props.navigator.push({
+		title: 'Results',
+		component: SearchBar,
+		});
+	
+	
+	}
+
+
     render() {
+	
         return (
             <View style={styles.container}>  
   
@@ -24,12 +49,14 @@ export default class Header extends Component {
                     <TextInput  
                         keyboardType='web-search'  
                         placeholder='请输入搜索商品名称'
-                        style={styles.inputText}/>  
+                        style={styles.inputText}
+						onFocus={(event) => this._handleFocus(event)} />
 
                 </View>  
                 <Image source={require('./images/header/icon_qr.png')} style={styles.scanIcon}/>  
-            </View>
-        )
+</View>
+
+     );
     }
 }
 
@@ -39,7 +66,7 @@ export default class Header extends Component {
 
 
 
-const styles = StyleSheet.create({  
+const styles = StyleSheet.create({
     container: {  
         flexDirection: 'row',   // 水平排布  
         paddingLeft: 10,  
@@ -92,6 +119,14 @@ const styles = StyleSheet.create({
 
 
 });
+
+
+
+
+
+
+
+
 
 
 
