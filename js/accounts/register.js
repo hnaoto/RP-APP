@@ -29,19 +29,30 @@ var Person = t.struct({
 
 var options = {}; // optional rendering options (see documentation)
 
-var RegisterForm = React.createClass({
 
-  onPress: function () {
+export default class RegisterForm extends Component {
+
+   
+
+  onPress() {
     // call getValue() to get the values of the form
     var value = this.refs.form.getValue();
     if (value) { // if validation fails, value will be null
       console.log(value); // value here is an instance of Person
     }
-  },
+  }
 
-  render: function() {
+  render(){
     return (
       <View style={styles.container}>
+			
+			    <TouchableHighlight
+					style={{padding:20, color: 'white', backgroundColor: 'black'}}
+					onPress={() => this.props.setNav()}>
+				<Text style={{color: 'white'}}>register</Text>
+        </TouchableHighlight>
+			
+			
         {/* display */}
         <Form
           ref="form"
@@ -54,7 +65,7 @@ var RegisterForm = React.createClass({
       </View>
     );
   }
-});
+}
 
 var styles = StyleSheet.create({
   container: {
@@ -86,5 +97,3 @@ var styles = StyleSheet.create({
 });
 
 
-
-module.exports = RegisterForm;

@@ -12,7 +12,9 @@ import {
     View,
     AlertIOS,
 		Image,
-		Platform
+		Platform,
+		TouchableHighlight,
+		NavigatorIOS,
 } from 'react-native';
 
 
@@ -30,12 +32,18 @@ export default class SearchBar extends React.Component {
 
    onTyping(text){
 		var countries = Countries.filter(function (country) {
-			return (country.name.toLowerCase()).indexOf(text.toLowerCase()) > -1 ?  true : false;
+			return (country.name).indexOf(text) > -1 ?  true : false;
 		}).map(function (country) {
 			return country.name;
 		});
 			this.setState({data: countries});
     }
+
+
+	_onPressButton(event) {
+		this.navigator.pop();
+		
+	}
 
 
   render() {
@@ -52,8 +60,8 @@ export default class SearchBar extends React.Component {
 						
 							
 								
-								
-									<AutoComplete
+
+                <AutoComplete
                     onTyping={(text) => this.onTyping(text)}
                     onSelect={(e) => AlertIOS.alert('You choosed', e)}
                     onBlur={() => AlertIOS.alert('Blur')}
@@ -63,7 +71,7 @@ export default class SearchBar extends React.Component {
 
                     suggestions={this.state.data}
 
-                    placeholder='请输入搜索商品名称'
+                    placeholder='This is a great placeholder'
                     style={styles_header.inputText}
                     clearButtonMode='always'
                     returnKeyType='go'
@@ -73,26 +81,36 @@ export default class SearchBar extends React.Component {
                     maximumNumberOfAutoCompleteRows={10}
                     applyBoldEffectToAutoCompleteSuggestions={true}
                     reverseAutoCompleteSuggestionsBoldEffect={true}
-                    showTextFieldDropShadowWhenAutoCompleteTableIsOpen={true}
+                    showTextFieldDropShadowWhenAutoCompleteTableIsOpen={false}
                     autoCompleteTableViewHidden={false}
 
                     autoCompleteTableBorderColor='#bbb'
                     autoCompleteTableBackgroundColor='#FFF'
                     autoCompleteTableCornerRadius={10}
                     autoCompleteTableBorderWidth={1}
-								
+
                     autoCompleteRowHeight={35}
 
                     autoCompleteFontSize={15}
                     autoCompleteRegularFontName='Helvetica Neue'
                     autoCompleteBoldFontName='Helvetica Bold'
-                    autoCompleteTableCellTextColor={'black'}
+                    autoCompleteTableCellTextColor={'#000'}
                 />
 								
 								
-								
 					</View>
-					<Image source={require('./images/header/icon_qr.png')} style={styles_header.scanIcon}/>
+
+
+        <TouchableHighlight   
+          underlayColor={styles_header.cancelButton}
+					navigator={this.props.navigator}
+								
+          onPress={this._onPressButton}>
+					<Text style={styles_header.cancelButton} >
+					 取消
+					</Text>
+				</TouchableHighlight>
+					
 				</View>
 
 				
@@ -152,11 +170,12 @@ const styles_header = StyleSheet.create({
         marginLeft: 8,  
         marginRight: 12  
     },  
-    scanIcon: {  
+    cancelButton: {
         height: 26.7,  
-        width: 26.7,  
-        resizeMode: 'stretch'  
-    },  
+        width: 30,
+				color: '#FFF',
+				paddingTop: 5.5,
+		},
     searchIcon: {  
         marginLeft: 6,  
         marginRight: 6,  

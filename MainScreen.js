@@ -20,7 +20,6 @@ import WSXPrj from './js/order/ShoppingCart';
 
 
 
-
 const HOME = 'home';
 const HOME_NORMAL = require('./images/tabs/home_normal.png');
 const HOME_FOCUS = require('./images/tabs/home_focus.png');
@@ -44,12 +43,11 @@ const PERSONAL_FOCUS = require('./images/tabs/personal_focus.png');
 export default class MainScreen extends Component {
 	 constructor(props) {
 		super(props);
-		this.state = {selectedTab: HOME}
-	}
-	
-	
-	
-	
+		this.state = {
+				selectedTab: HOME,
+				itemPage: false
+			}
+	 }
 	
 	
     _renderTabItem(img, selectedImg, tag, childView) {  
@@ -76,25 +74,32 @@ export default class MainScreen extends Component {
 
 
 
+    _setNav(){
+		  this.setState({ itemPage: true
+   });
+		}
+
 	
     render() {
+					var tabnav = this.state.itemPage ?
+						null:
+					 (<TabNavigator hidesTabTouch={true} tabBarStyle={styles.tab}>
+						{this._renderTabItem(HOME_NORMAL, HOME_FOCUS, HOME, <HomePage/> )}
+						{this._renderTabItem(CATEGORY_NORMAL, CATEGORY_FOCUS, CATEGORY, this._createChildView(CATEGORY)  )}
+						{this._renderTabItem(FAXIAN_NORMAL, FAXIAN_FOCUS, FAXIAN, this._createChildView(FAXIAN))}
+						{this._renderTabItem(CART_NORMAL, CART_FOCUS, CART, <WSXPrj/>)}
+						{this._renderTabItem(PERSONAL_NORMAL, PERSONAL_FOCUS, PERSONAL,  <RegisterForm
+						setNav={this._setNav.bind(this)} itemPage={this.state.itemPage} />)}
+					</TabNavigator>);
+			
+		
+		 
         return (
             <View style={{flex:1}}>
+					
+	       {tabnav}
 				
-				
-		
-		
-		  
-				
-				
-	<TabNavigator hidesTabTouch={true} tabBarStyle={styles.tab}>
-        {this._renderTabItem(HOME_NORMAL, HOME_FOCUS, HOME, <HomePage/> )}
-        {this._renderTabItem(CATEGORY_NORMAL, CATEGORY_FOCUS, CATEGORY, this._createChildView(CATEGORY))}  
-        {this._renderTabItem(FAXIAN_NORMAL, FAXIAN_FOCUS, FAXIAN, this._createChildView(FAXIAN))}  
-        {this._renderTabItem(CART_NORMAL, CART_FOCUS, CART, <WSXPrj/>)}
-        {this._renderTabItem(PERSONAL_NORMAL, PERSONAL_FOCUS, PERSONAL,  <RegisterForm/>    )}
-    </TabNavigator>
-				
+
 				
 				
             </View>
@@ -114,15 +119,17 @@ export default class MainScreen extends Component {
 var styles = StyleSheet.create({
 	tab: {
 		height: 52,
-		backgroundColor: '#EEE',
-		alignItems: 'center'
+		backgroundColor: '#FFF',
+		alignItems: 'center',
+		borderTopWidth: 1,
+		borderTopColor:'#BBB'
 	},
-    tabIcon: {  
+	tabIcon: {
         width: 30,  
         height: 35,  
         resizeMode: 'stretch',  
         marginTop: 10  
-    }
+	}
 	
 	
 	

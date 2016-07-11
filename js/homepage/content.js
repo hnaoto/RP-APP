@@ -15,7 +15,8 @@ import {
   ScrollView,
   NavigatorIOS,
   TextInput,
-  Platform
+  Platform,
+	ListView,
 } from 'react-native';
 
 
@@ -26,15 +27,20 @@ import SearchBar from './SearchBar';
 
 
 
+var map_ql = 'http://restapi.amap.com/v3/place/around?key=f4071fb1fb15d02d646e489f53490b4b&location=';
+var map_qr = '&keywords=%E8%82%AF%E5%BE%B7%E5%9F%BA&types=050301&offset=5&page=1&extensions=all';
 
 
 
 export default class Content extends React.Component {
   constructor(props) {
-    super(props)
-
+    super(props);
     this.state = {
-      items: []
+		 dataSource: new ListView.DataSource({
+        rowHasChanged: (row1, row2) => row1 !== row2,
+      }),
+      items: [],
+			message: ''
     }
   }
 	
@@ -48,13 +54,14 @@ export default class Content extends React.Component {
         { title: 'And simple', css: styles.slide3,  image:require('./images/banner/3.jpg')  }
       ]
     })
+		
+		this._getNearbyShop();
   }
 	
 	
 	
 	
- 	_handleFocus(event){
-	
+ 	_handleFocus(event) {
 		this.props.navigator.push({
 		  title: 'Results',
 		  component: SearchBar,
@@ -63,7 +70,71 @@ export default class Content extends React.Component {
 	
 	}
 
+
+
+	getMoviesFromApiAsync() {
+		return fetch('http://facebook.github.io/react-native/movies.json')
+					.then((response) => response.json())
+					.then((responseJson) => { return responseJson.movies; })
+					.catch((error) => { console.error(error); }
+					);
+	}
+
+
+
+
+  _executeQuery(query) {
+		fetch(query)
+		.then(response => response.json())
+		.then((responseData) => {
+			this.setState({
+				dataSource: this.state.dataSource.cloneWithRows(responseData.pois)
+				});
+		})
+		.catch(error =>
+			this.setState({
+				message: 'Something bad happened ' + error
+		}));
+
+  }
+
+	_getNearbyShop() {
+		navigator.geolocation.getCurrentPosition(
+			location => {
+				var geo = location.coords.latitude + ',' + location.coords.longitude;
+				var query = map_ql + geo + map_qr;
+				console.log(query);
+				this._executeQuery(query);
+    },
+    error => {
+      this.setState({
+        message: 'There was a problem with obtaining your location: ' + error
+      });
+    });
+}
 	
+
+
+  _renderShop(shop) {
+    return (
+      <View style={styles_list.container}>
+        <Image
+          source={{uri: shop.photos[0].url}}
+          style={styles_list.thumbnail}
+        />
+        <View style={styles_list.rightContainer}>
+					<View style={styles_list.textContainer}>
+						<Text style={styles_list.name}>{shop.name}</Text>
+						<Text style={styles_list.distance}>{  shop.distance/1000 }千米</Text>
+					</View>
+        </View>
+      </View>
+    );
+  }
+
+
+
+
   render() {
     return (
 			<View>
@@ -73,6 +144,7 @@ export default class Content extends React.Component {
 						<Image source={require('./images/header/icon_search.png')} style={styles_header.searchIcon}/>
 						<TextInput
 							placeholder='请输入搜索商品名称'
+							keyboardType='web-search'
 							style={styles_header.inputText}
 							onFocus={(event) => this._handleFocus(event)} />
 					</View>
@@ -93,8 +165,22 @@ export default class Content extends React.Component {
 					)
 			  })}
 			</Swiper>
-
-
+			
+			
+			<View style={styles.sep}>
+			  <Text style={styles.sepText}>
+				附近门店
+				</Text>
+			</View>
+			
+	
+			 <ListView
+        dataSource={this.state.dataSource}
+        renderRow={this._renderShop}
+        style={styles_list.listView}
+       />
+	
+			
       </View>
 
 		
@@ -180,7 +266,19 @@ var styles = StyleSheet.create({
 	marginTop: 3,
 	marginBottom: 3,
   
-  }
+  },
+	sepText :{
+		fontSize: 15,
+		color:'#777777',
+		marginLeft: 15,
+		marginBottom: 3,
+	},
+	sep: {
+		borderBottomColor: '#ECECFB',
+		borderBottomWidth: 1,
+		marginTop:10
+	}
+	
   
 });
 
@@ -234,11 +332,54 @@ const styles_header = StyleSheet.create({
         flex: 1,  
         backgroundColor: 'transparent',  
         fontSize: 14  
-    }
+    },
 
 
 
 });
 
+var styles_list = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+		borderBottomColor: '#ECECFB',
+		borderBottomWidth: 1,
+		padding: 5,
+		
+		
+  },
+  rightContainer: {
+    flex: 1,
+		marginLeft: 5
+  },
+  name: {
+    fontSize: 16,
+    marginBottom: 8,
+		padding: 5,
+		fontWeight: '200',
+    
+  },
+  year: {
+    textAlign: 'center',
+  },
+	distance: {
+    fontSize: 13,
+		fontWeight: '200',
+		color: '#666',
+		paddingTop: 8
+	
+	},
+  thumbnail: {
+    width: 70,
+    height: 70,
+		
+  },
+  listView: {
+    paddingBottom: 20,
+    backgroundColor: '#FFF',
+  },
+	textContainer: {
+		flexDirection: 'row',
+	}
+});
 
 
