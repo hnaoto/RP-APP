@@ -17,6 +17,7 @@ import TabNavigator from 'react-native-tab-navigator';
 import HomePage from './js/homepage/index';
 import RegisterForm from './js/accounts/register';
 import WSXPrj from './js/order/ShoppingCart';
+import ShopIndex from './js/shop/index';
 
 
 
@@ -86,7 +87,7 @@ export default class MainScreen extends Component {
 					 (<TabNavigator hidesTabTouch={true} tabBarStyle={styles.tab}>
 						{this._renderTabItem(HOME_NORMAL, HOME_FOCUS, HOME, <HomePage/> )}
 						{this._renderTabItem(CATEGORY_NORMAL, CATEGORY_FOCUS, CATEGORY, this._createChildView(CATEGORY)  )}
-						{this._renderTabItem(FAXIAN_NORMAL, FAXIAN_FOCUS, FAXIAN, this._createChildView(FAXIAN))}
+						{this._renderTabItem(FAXIAN_NORMAL, FAXIAN_FOCUS, FAXIAN, <ShopIndex/>   )}
 						{this._renderTabItem(CART_NORMAL, CART_FOCUS, CART, <WSXPrj/>)}
 						{this._renderTabItem(PERSONAL_NORMAL, PERSONAL_FOCUS, PERSONAL,  <RegisterForm
 						setNav={this._setNav.bind(this)} itemPage={this.state.itemPage} />)}

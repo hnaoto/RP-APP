@@ -10,6 +10,8 @@
     "react": "15.2.0",
     "react-native": "^0.29.0",
     "react-native-autocomplete": "^0.1.4",
+    "react-native-drawer": "^2.2.6",
+    "react-native-scrollable-tab-view": "^0.5.2",
     "react-native-swiper": "^1.4.6",
     "react-native-tab-navigator": "^0.3.2",
     "tcomb-form-native": "^0.5.1"

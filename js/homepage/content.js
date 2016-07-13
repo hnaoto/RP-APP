@@ -17,6 +17,7 @@ import {
   TextInput,
   Platform,
 	ListView,
+	TouchableOpacity
 } from 'react-native';
 
 
@@ -24,11 +25,16 @@ import {
 var Swiper = require('react-native-swiper');
 import Header from './Header';
 import SearchBar from './SearchBar';
+import ShopView from '../shop/index';
 
 
 
-var map_ql = 'http://restapi.amap.com/v3/place/around?key=f4071fb1fb15d02d646e489f53490b4b&location=';
-var map_qr = '&keywords=%E8%82%AF%E5%BE%B7%E5%9F%BA&types=050301&offset=5&page=1&extensions=all';
+
+
+
+
+var map_ql = 'http://restapi.amap.com/v3/place/around?key=3048183b07370de2b2247499d8e2b75d&location=';
+var map_qr = '&keywords=%E4%B8%AD%E7%B2%AE%E5%AE%B6%E4%BD%B3%E5%BA%B7%E8%82%89%E9%A3%9F&radius=13000&extensions=all';
 
 
 
@@ -40,7 +46,8 @@ export default class Content extends React.Component {
         rowHasChanged: (row1, row2) => row1 !== row2,
       }),
       items: [],
-			message: ''
+			message: '',
+			rating: '',
     }
   }
 	
@@ -63,22 +70,12 @@ export default class Content extends React.Component {
 	
  	_handleFocus(event) {
 		this.props.navigator.push({
-		  title: 'Results',
 		  component: SearchBar,
 			navigationBarHidden: true
 		});
 	
 	}
 
-
-
-	getMoviesFromApiAsync() {
-		return fetch('http://facebook.github.io/react-native/movies.json')
-					.then((response) => response.json())
-					.then((responseJson) => { return responseJson.movies; })
-					.catch((error) => { console.error(error); }
-					);
-	}
 
 
 
@@ -98,6 +95,8 @@ export default class Content extends React.Component {
 
   }
 
+
+
 	_getNearbyShop() {
 		navigator.geolocation.getCurrentPosition(
 			location => {
@@ -111,24 +110,70 @@ export default class Content extends React.Component {
         message: 'There was a problem with obtaining your location: ' + error
       });
     });
-}
+	}
 	
+	
+	
+	_stars(count) {
+	  var result = '';
+		
+		if (count != '') {
+			for (var i = 0; i < Math.round(count); i++) {
+				result += '★';
+			}
+		}
+	
+		return (result += count);
+	}
+
+
+
+	_shopRowPressed(shopID){
+		console.log(shopID);
+		this.props.navigator.push({
+			component: ShopView,
+			navigationBarHidden: true,
+			passProps: {shopID: shopID}
+		});
+	
+	}
 
 
   _renderShop(shop) {
-    return (
+	  var photo_url = (shop.photos.length > 0) ?  {uri: (shop.photos)[0].url} : {image: require('./images/shop/shop_icon.png')}['image'] ;
+		
+	  var rating = this._stars(shop.biz_ext.rating);
+
+		
+     return(
+			<TouchableOpacity onPress={() => this._shopRowPressed(shop.id)}>
+			
+			<View>
       <View style={styles_list.container}>
         <Image
-          source={{uri: shop.photos[0].url}}
+          source={photo_url}
           style={styles_list.thumbnail}
         />
-        <View style={styles_list.rightContainer}>
-					<View style={styles_list.textContainer}>
+					<View style={styles_list.rightContainer}>
+					<View style={styles_list.titleContainer}>
 						<Text style={styles_list.name}>{shop.name}</Text>
-						<Text style={styles_list.distance}>{  shop.distance/1000 }千米</Text>
+						<Text style={styles_list.distance}>{shop.distance/1000}千米</Text>
 					</View>
+					<Text style={styles_list.rating}>
+					 {rating}
+					</Text>
+					
+					<View style={styles_list.statusContainer}>
+						<Text style={styles_list.statusText}>
+						 可以自取
+						</Text>
+					</View>
+					
+					
         </View>
       </View>
+			</View>
+			</TouchableOpacity>
     );
   }
 
@@ -169,14 +214,14 @@ export default class Content extends React.Component {
 			
 			<View style={styles.sep}>
 			  <Text style={styles.sepText}>
-				附近门店
+					附近门店
 				</Text>
 			</View>
 			
 	
 			 <ListView
         dataSource={this.state.dataSource}
-        renderRow={this._renderShop}
+        renderRow={this._renderShop.bind(this)}
         style={styles_list.listView}
        />
 	
@@ -269,14 +314,14 @@ var styles = StyleSheet.create({
   },
 	sepText :{
 		fontSize: 15,
-		color:'#777777',
+		color:'#999',
 		marginLeft: 15,
 		marginBottom: 3,
 	},
 	sep: {
 		borderBottomColor: '#ECECFB',
 		borderBottomWidth: 1,
-		marginTop:10
+		marginTop:20
 	}
 	
   
@@ -343,19 +388,22 @@ var styles_list = StyleSheet.create({
     flexDirection: 'row',
 		borderBottomColor: '#ECECFB',
 		borderBottomWidth: 1,
-		padding: 5,
-		
-		
+		paddingLeft: 10,
+		paddingTop: 5,
+		paddingBottom: 5,
+		height: 90
   },
   rightContainer: {
     flex: 1,
-		marginLeft: 5
+		marginLeft: 8,
+	
   },
   name: {
     fontSize: 16,
-    marginBottom: 8,
-		padding: 5,
-		fontWeight: '200',
+		paddingTop: 1,
+		paddingRight: 3,
+		fontWeight: '500',
+		color:'#666'
     
   },
   year: {
@@ -365,11 +413,11 @@ var styles_list = StyleSheet.create({
     fontSize: 13,
 		fontWeight: '200',
 		color: '#666',
-		paddingTop: 8
+		paddingTop: 5
 	
 	},
   thumbnail: {
-    width: 70,
+    width: 65,
     height: 70,
 		
   },
@@ -377,8 +425,25 @@ var styles_list = StyleSheet.create({
     paddingBottom: 20,
     backgroundColor: '#FFF',
   },
-	textContainer: {
+	titleContainer: {
 		flexDirection: 'row',
+	},
+	rating: {
+		color: '#EA8530',
+		fontSize: 12,
+	},
+	statusContainer: {
+	  marginTop: 15,
+		borderRadius: 3,
+		backgroundColor: '#56A6DB',
+		width: 57,
+		height: 20,
+		padding: 4,
+	},
+	statusText: {
+		color: '#FFF',
+		fontSize: 12,
+		fontWeight: '900',
 	}
 });
 
