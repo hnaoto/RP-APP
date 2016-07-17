@@ -129,11 +129,12 @@ export default class Content extends React.Component {
 
 
 	_shopRowPressed(shopID){
-		console.log(shopID);
+		console.log(shopID)
 		this.props.navigator.push({
 			component: ShopView,
+			passProps: {gpsID: shopID},
 			navigationBarHidden: true,
-			passProps: {shopID: shopID}
+
 		});
 	
 	}
@@ -148,7 +149,7 @@ export default class Content extends React.Component {
      return(
 			<TouchableOpacity onPress={() => this._shopRowPressed(shop.id)}>
 			
-			<View>
+		
       <View style={styles_list.container}>
         <Image
           source={photo_url}
@@ -168,11 +169,8 @@ export default class Content extends React.Component {
 						 可以自取
 						</Text>
 					</View>
-					
-					
         </View>
       </View>
-			</View>
 			</TouchableOpacity>
     );
   }
@@ -182,7 +180,7 @@ export default class Content extends React.Component {
 
   render() {
     return (
-			<View>
+			<View style={styles.container}>
 			
 				<View style={styles_header.container}>
 					<View style={styles_header.searchBox}>
@@ -421,12 +419,10 @@ var styles_list = StyleSheet.create({
     height: 70,
 		
   },
-  listView: {
-    paddingBottom: 20,
-    backgroundColor: '#FFF',
-  },
+
 	titleContainer: {
 		flexDirection: 'row',
+		flex: 1,
 	},
 	rating: {
 		color: '#EA8530',

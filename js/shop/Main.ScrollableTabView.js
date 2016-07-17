@@ -39,7 +39,7 @@ export default class ControlPanel extends Component {
 			<ScrollableTabView
 				style={{marginTop: 20, }}
 				renderTabBar={() => <DefaultTabBar />}>
-					<ProductPage tabLabel='店内产品' />
+					<ProductPage tabLabel='店内产品' gpsID={this.props.gpsID} />
 					<ReviewPage tabLabel='用户评价' />
 					<ShopDetailPage tabLabel='店铺详情' />
 			</ScrollableTabView>
