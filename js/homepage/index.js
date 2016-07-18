@@ -21,26 +21,32 @@ import {
 
 
 
-
 import Content from './content';
 
 
 
 
 export default class HomePage extends React.Component {
+
+
+
+
+	
 	
   render() {
     return (
     <NavigatorIOS
-	  style={styles.container}
-      initialRoute={{
-        title: 'My View Title',
-        component: Content,
-		navigationBarHidden: true
-	}}/>
-	
-	  
-	);
+			style={styles.container}
+    	initialRoute={{
+       	title: 'initRoute',
+       	component: Content,
+				navigationBarHidden: true,
+        passProps: {
+					_hideNav: this.props._hideNav.bind(this),
+					_showNav: this.props._showNav.bind(this),
+				},
+			}}/>
+		);
   }
 	
 }
@@ -48,8 +54,8 @@ export default class HomePage extends React.Component {
 
 
 const styles = StyleSheet.create({
-    text: {
-    color: 'black',
+	text: {
+  	color: 'black',
     backgroundColor: 'white',
     fontSize: 30,
     margin: 80

@@ -1,0 +1,80 @@
+'use strict';
+
+
+import React, { Component } from 'react';
+import {
+  AppRegistry,
+  StyleSheet,
+  Text,
+  View,
+  NavigatorIOS,
+  TextInput,
+  TouchableHighlight,
+  ListView,
+  Image
+} from 'react-native';
+
+
+
+
+
+export default class ProductPanel extends React.Component {
+	render() {
+	
+		return (
+			<View style={styles.container}>
+				<Text>
+					11
+				</Text>
+			</View>
+		
+		);
+	
+	}
+
+
+}
+
+
+
+var styles = StyleSheet.create({
+  container: {
+    height: 78,
+		backgroundColor: '#365F4E',
+		alignItems: 'center',
+		flexDirection: 'row',
+		position:'relative',
+		bottom:0
+
+  },
+  heading: {
+    backgroundColor: '#F8F8F8',
+  },
+  separator: {
+    height: 1,
+    backgroundColor: '#DDDDDD'
+  },
+  image: {
+    width: 400,
+    height: 300
+  },
+  price: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    margin: 5,
+    color: '#48BBEC'
+  },
+  title: {
+    fontSize: 20,
+    margin: 5,
+    color: '#656565'
+  },
+  description: {
+    fontSize: 18,
+    margin: 5,
+    color: '#656565',
+
+  }
+
+
+});

@@ -42,6 +42,7 @@ export default class SearchBar extends React.Component {
 
 	_onPressButton(event) {
 		this.navigator.pop();
+		this._showNav();
 		
 	}
 
@@ -49,69 +50,29 @@ export default class SearchBar extends React.Component {
   render() {
         return (
 	      <View>
-				
-									
-									<View style={styles_header.container}>
-									<View style={styles_header.searchBox}>
-					
-					
-					
-						<Image source={require('./images/header/icon_search.png')} style={styles_header.searchIcon}/>
+					<View style={styles_header.container}>
+						<View style={styles_header.searchBox}>
+	
 						
-							
-								
-
-                <AutoComplete
-                    onTyping={(text) => this.onTyping(text)}
-                    onSelect={(e) => AlertIOS.alert('You choosed', e)}
-                    onBlur={() => AlertIOS.alert('Blur')}
-                    onFocus={() => AlertIOS.alert('Focus')}
-                    onSubmitEditing={(e) => AlertIOS.alert('onSubmitEditing')}
-                    onEndEditing={(e) => AlertIOS.alert('onEndEditing')}
-
-                    suggestions={this.state.data}
-
-                    placeholder='This is a great placeholder'
-                    style={styles_header.inputText}
-                    clearButtonMode='always'
-                    returnKeyType='go'
-                    textAlign='left'
-                    clearTextOnFocus={true}
-
-                    maximumNumberOfAutoCompleteRows={10}
-                    applyBoldEffectToAutoCompleteSuggestions={true}
-                    reverseAutoCompleteSuggestionsBoldEffect={true}
-                    showTextFieldDropShadowWhenAutoCompleteTableIsOpen={false}
-                    autoCompleteTableViewHidden={false}
-
-                    autoCompleteTableBorderColor='#bbb'
-                    autoCompleteTableBackgroundColor='#FFF'
-                    autoCompleteTableCornerRadius={10}
-                    autoCompleteTableBorderWidth={1}
-
-                    autoCompleteRowHeight={35}
-
-                    autoCompleteFontSize={15}
-                    autoCompleteRegularFontName='Helvetica Neue'
-                    autoCompleteBoldFontName='Helvetica Bold'
-                    autoCompleteTableCellTextColor={'#000'}
-                />
-								
-								
-					</View>
+							<Image source={require('./images/header/icon_search.png')} style={styles_header.searchIcon}/>
+							<TextInput
+							keyboardType='web-search'
+							placeholder='搜索京东商品/店铺'
+						  style={styles_header.inputText}/>
+						</View>
 
 
-        <TouchableHighlight   
-          underlayColor={styles_header.cancelButton}
-					navigator={this.props.navigator}
-								
-          onPress={this._onPressButton}>
-					<Text style={styles_header.cancelButton} >
-					 取消
-					</Text>
-				</TouchableHighlight>
+						<TouchableHighlight
+							underlayColor={styles_header.cancelButton}
+							onPress={this._onPressButton}
+							navigator={this.props.navigator}
+							_showNav={this.props._showNav}>
+							<Text style={styles_header.cancelButton} >
+								取消
+							</Text>
+						</TouchableHighlight>
 					
-				</View>
+					</View>
 
 				
 				</View>

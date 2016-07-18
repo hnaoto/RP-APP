@@ -1,4 +1,4 @@
-
+'use strict'
 
 import React, { Component,  PropTypes } from 'react';
 import {
@@ -20,6 +20,13 @@ import {
 
 
 
+
+import ProductView from './ProductView';
+
+
+
+
+
 var base_url = 'http://rp-backend.herokuapp.com/api/';
 var get_products = 'bcs/products/?format=json&gps_id=';
 
@@ -34,8 +41,8 @@ export default class ProductPage extends Component {
 		 dataSource: new ListView.DataSource({
         rowHasChanged: (row1, row2) => row1 !== row2,
 			}),
-		 gpsID: this.props.gpsID,
 		 message: '',
+
 		 
 	
     }
@@ -44,16 +51,17 @@ export default class ProductPage extends Component {
 
 
   componentDidMount() {
-		this._get(base_url + get_products + this.props.gpsID)
+		this._get(base_url + get_products + this.props.gpsID);
+		this.props._hideNav();
 		
 	}
+	
 
   _get(url) {
 		console.log(url)
 		fetch(url)
 		.then(response => response.json())
 		.then((responseData) => {
-			console.log(responseData)
 			this.setState({
 				dataSource: this.state.dataSource.cloneWithRows(responseData)
 				});
@@ -66,11 +74,25 @@ export default class ProductPage extends Component {
   }
 	
 	
+	_productRowPressed(product){
+		
+		this.props.navigator.push({
+			component: ProductView,
+			passProps: {
+				product: product,
+				hideNav: this.props.hideNav,
+				_hideNav: this.props._hideNav,
+			},
+		});
+	}
+	
+	
 	_renderProduct(product) {
 	
-		
 	 return(
-			<TouchableOpacity onPress={() => this._shopRowPressed(shop.id)}>
+		 
+			<TouchableOpacity
+				onPress={() => this._productRowPressed(product)}>
 			
 		
       <View style={styles_list.container}>

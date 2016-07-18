@@ -1,6 +1,4 @@
 
-
-// import Swiper from 'react-native-swiper'
 'use strict'
 
 import React, { Component } from 'react';
@@ -19,9 +17,6 @@ import {
 	ListView,
 	TouchableOpacity
 } from 'react-native';
-
-
-
 var Swiper = require('react-native-swiper');
 import Header from './Header';
 import SearchBar from './SearchBar';
@@ -63,9 +58,20 @@ export default class Content extends React.Component {
     })
 		
 		this._getNearbyShop();
+		
+	
   }
+
 	
+	componentWillReceiveProps(){
+		if (this.props.navigator.navigationContext.currentRoute.title == 'initRoute') {
+			console.log('update')
+		}
 	
+	}
+
+
+
 	
 	
  	_handleFocus(event) {
@@ -129,10 +135,13 @@ export default class Content extends React.Component {
 
 
 	_shopRowPressed(shopID){
-		console.log(shopID)
 		this.props.navigator.push({
 			component: ShopView,
-			passProps: {gpsID: shopID},
+			passProps: {
+				gpsID: shopID,
+				_hideNav: this.props._hideNav,
+				_showNav: this.props._showNav,
+			},
 			navigationBarHidden: true,
 
 		});

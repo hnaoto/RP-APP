@@ -22,8 +22,7 @@ import {
 import Drawer from 'react-native-drawer'
 import ControlPanel from './ControlPanel'
 import Main from './Main.ScrollableTabView'
-import Header from './Header';
-
+import SearchBar from './SearchBar';
 
 
 export default class ShopView extends Component {
@@ -37,6 +36,13 @@ export default class ShopView extends Component {
   openDrawer = () => {
     this._drawer.open()
   };
+	
+	
+	
+
+	
+	
+	
   render() {
 	
 	
@@ -66,9 +72,15 @@ export default class ShopView extends Component {
         panOpenMask={0.2}
         negotiatePan
         >
-			<Header/>
+			<SearchBar navigator={this.props.navigator}
+								 _showNav={this.props._showNav.bind(this)}
+								 hideNav={this.props.hideNav}/>
 
-      <Main gpsID={this.props.gpsID}  />
+      <Main gpsID={this.props.gpsID} 
+						navigator={this.props.navigator}
+						_hideNav={this.props._hideNav.bind(this)}
+						_showNav={this.props._showNav.bind(this)}
+						hideNav={this.props.hideNav}/>
       </Drawer>
     )
   }

@@ -22,8 +22,6 @@ import ProductPage from './Products';
 import ReviewPage from './Reviews';
 import ShopDetailPage from './ShopDetail';
 
-
-import FacebookTabBar from './FacebookTabBar';
 import ScrollableTabView, { DefaultTabBar, ScrollableTabBar } from 'react-native-scrollable-tab-view';
 
 
@@ -39,7 +37,12 @@ export default class ControlPanel extends Component {
 			<ScrollableTabView
 				style={{marginTop: 20, }}
 				renderTabBar={() => <DefaultTabBar />}>
-					<ProductPage tabLabel='店内产品' gpsID={this.props.gpsID} />
+					<ProductPage 
+						tabLabel='店内产品' 
+						gpsID={this.props.gpsID}
+						navigator={this.props.navigator}
+						_showNav={this.props._showNav.bind(this)}
+						_hideNav={this.props._hideNav.bind(this)}/>
 					<ReviewPage tabLabel='用户评价' />
 					<ShopDetailPage tabLabel='店铺详情' />
 			</ScrollableTabView>
