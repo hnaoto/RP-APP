@@ -13,7 +13,7 @@ import {
     AlertIOS,
 		Image,
 		Platform,
-		TouchableHighlight,
+		TouchableOpacity,
 		NavigatorIOS,
 } from 'react-native';
 
@@ -51,26 +51,33 @@ export default class SearchBar extends React.Component {
         return (
 	      <View>
 					<View style={styles_header.container}>
-						<View style={styles_header.searchBox}>
-	
+					
+					
+										
+						<TouchableOpacity
+							underlayColor={styles_header.cancelButton}
+							onPress={this._onPressButton}
+							navigator={this.props.navigator}
+							_showNav={this.props._showNav}>
+							<Image
+								source={require('./images/product/back.png')}
+							/>
+						</TouchableOpacity>
 						
-							<Image source={require('./images/header/icon_search.png')} style={styles_header.searchIcon}/>
+						
+						<View style={styles_header.searchBox}>
+	           	
+					
+						<Image source={require('./images/header/icon_search.png')} style={styles_header.searchIcon}/>
+						
+							
+		
 							<TextInput
 							keyboardType='web-search'
 							placeholder='搜索京东商品/店铺'
 						  style={styles_header.inputText}/>
 						</View>
 
-
-						<TouchableHighlight
-							underlayColor={styles_header.cancelButton}
-							onPress={this._onPressButton}
-							navigator={this.props.navigator}
-							_showNav={this.props._showNav}>
-							<Text style={styles_header.cancelButton} >
-								取消
-							</Text>
-						</TouchableHighlight>
 					
 					</View>
 
@@ -108,24 +115,24 @@ var styles = StyleSheet.create({
 
 const styles_header = StyleSheet.create({
     container: {  
-        flexDirection: 'row',   // 水平排布  
+        flexDirection: 'row',
         paddingLeft: 10,  
         paddingRight: 10,  
-        paddingTop: Platform.OS === 'ios' ? 20 : 0,  // 处理iOS状态栏  
-        height: Platform.OS === 'ios' ? 68 : 48,   // 处理iOS状态栏  
-        backgroundColor: '#26634F',
-        alignItems: 'center'  // 使元素垂直居中排布, 当flexDirection为column时, 为水平居中  
+        paddingTop: Platform.OS === 'ios' ? 20 : 0,
+        height: Platform.OS === 'ios' ? 68 : 48,
+        backgroundColor: '#999',
+        alignItems: 'center'  ,
     },  
     logo: {  
         height: 24,  
         width: 64,  
-        resizeMode: 'stretch'  // 设置拉伸模式  
+        resizeMode: 'stretch'
     },  
     searchBox: {  
         height: 30,  
         flexDirection: 'row',  
-        flex: 1,  // 类似于android中的layout_weight,设置为1即自动拉伸填充  
-        borderRadius: 5,  // 设置圆角边  
+        flex: 1,
+        borderRadius: 5,  
         backgroundColor: 'white',  
         alignItems: 'center',  
         marginLeft: 8,  
