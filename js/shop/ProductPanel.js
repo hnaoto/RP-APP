@@ -22,10 +22,18 @@ export default class ProductPanel extends React.Component {
 	render() {
 	
 		return (
+		
+			<View>
 			<View style={styles.container}>
-				<Text>
-					11
-				</Text>
+			
+				<Image
+						source={require('./images/product/cart.png')}
+						style={styles.cart}
+
+				/>
+
+			</View>
+			
 			</View>
 		
 		);
@@ -39,7 +47,7 @@ export default class ProductPanel extends React.Component {
 
 var styles = StyleSheet.create({
   container: {
-    height: 78,
+    height: 60,
 		backgroundColor: '#365F4E',
 		alignItems: 'center',
 		flexDirection: 'row',
@@ -47,6 +55,18 @@ var styles = StyleSheet.create({
 		bottom:0
 
   },
+	cart: {
+		position: 'absolute',
+		height:70,
+		width:70,
+		bottom:15,
+		right:20,
+		
+	},
+	
+	
+	
+	
   heading: {
     backgroundColor: '#F8F8F8',
   },

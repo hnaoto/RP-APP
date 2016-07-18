@@ -74,9 +74,15 @@ export default class SearchBar extends React.Component {
 		
 							<TextInput
 							keyboardType='web-search'
-							placeholder='搜索京东商品/店铺'
+							placeholder='搜索店内商品'
 						  style={styles_header.inputText}/>
 						</View>
+						
+						<Image
+							source={require('./images/product/category.png')}
+							style={styles_header.categoryButton}/>
+						
+						
 
 					
 					</View>
@@ -90,27 +96,6 @@ export default class SearchBar extends React.Component {
 }
 
 
-var styles = StyleSheet.create({
-    autocomplete: {
-				alignSelf: 'stretch',
-        height: 50,
-				fontSize: 14,
-        backgroundColor: 'white',
-				
-    },
-    container: {
-        flex: 1,
-        backgroundColor: '#F5FCFF',
-			
-    },
-		searchBox: {
-        flex: 1,
-        borderRadius: 5,
-				backgroundColor: '#26634F',
-
-    },  
-
-});
 
 
 const styles_header = StyleSheet.create({
@@ -132,7 +117,7 @@ const styles_header = StyleSheet.create({
         height: 30,  
         flexDirection: 'row',  
         flex: 1,
-        borderRadius: 5,  
+        borderRadius: 5,
         backgroundColor: 'white',  
         alignItems: 'center',  
         marginLeft: 8,  
@@ -163,7 +148,14 @@ const styles_header = StyleSheet.create({
         backgroundColor: 'transparent',  
         fontSize: 14,
 				alignSelf:'stretch'
-    }
+    },
+		categoryButton: {
+			paddingTop:5.5,
+			height: 36,
+			width: 28,
+			
+		
+		},
 
 
 
