@@ -55,7 +55,9 @@ export default class ProductView extends React.Component {
         </View>
 			</ScrollView>
 				
-				<ProductPanel/>
+				<ProductPanel
+					product={product}
+					navigator={this.props.navigator}/>
       </View>
 			
 		);
