@@ -9,7 +9,7 @@ import {
   View,
   NavigatorIOS,
   TextInput,
-  TouchableHighlight,
+  TouchableOpacity,
   ListView,
   Image
 } from 'react-native';
@@ -25,12 +25,15 @@ export default class ProductPanel extends React.Component {
 		
 			<View>
 			<View style={styles.container}>
+				
+					<Text style={styles.addToCart}>
+						加入购物车
+					</Text>
+		
 			
 				<Image
 						source={require('./images/product/cart.png')}
-						style={styles.cart}
-
-				/>
+						style={styles.cart}/>
 
 			</View>
 			
@@ -63,10 +66,10 @@ var styles = StyleSheet.create({
 		right:20,
 		
 	},
-	
-	
-	
-	
+	addToCart: {
+		fontSize:20,
+		backgroundColor:'#437661',
+	},
   heading: {
     backgroundColor: '#F8F8F8',
   },

@@ -55,12 +55,12 @@ export default class SearchBar extends React.Component {
 					
 										
 						<TouchableOpacity
-							underlayColor={styles_header.cancelButton}
 							onPress={this._onPressButton}
 							navigator={this.props.navigator}
 							_showNav={this.props._showNav}>
 							<Image
 								source={require('./images/product/back.png')}
+								style={styles_header.backButton}
 							/>
 						</TouchableOpacity>
 						
@@ -123,10 +123,9 @@ const styles_header = StyleSheet.create({
         marginLeft: 8,  
         marginRight: 12  
     },  
-    cancelButton: {
+    backButton: {
         height: 26.7,  
         width: 30,
-				color: '#FFF',
 				paddingTop: 5.5,
 		},
     searchIcon: {  

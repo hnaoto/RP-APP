@@ -28,9 +28,6 @@ import ScrollableTabView, { DefaultTabBar, ScrollableTabBar } from 'react-native
 
 export default class ControlPanel extends Component {
 
-  static contextTypes = {
-    drawer: PropTypes.object.isRequired,
-  };
 
   render() {
     return (

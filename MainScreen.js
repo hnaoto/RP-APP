@@ -46,9 +46,14 @@ export default class MainScreen extends Component {
 		super(props);
 		this.state = {
 				selectedTab: HOME,
-				itemPage: false
+				hideNav: false,
+			
 			}
 	 }
+	
+
+	
+
 	
 	
     _renderTabItem(img, selectedImg, tag, childView) {  
@@ -75,35 +80,50 @@ export default class MainScreen extends Component {
 
 
 
-    _setNav(){
-		  this.setState({ itemPage: true
-   });
+		_showNav(){
+		  this.setState(
+				{hideNav: false}
+			);
+		
 		}
+	
+	
+    _hideNav(){
+		  this.setState(
+				{hideNav: true}
+			);
+			
+		}
+	
+
 
 	
     render() {
-					var tabnav = this.state.itemPage ?
-						null:
-					 (<TabNavigator hidesTabTouch={true} tabBarStyle={styles.tab}>
-						{this._renderTabItem(HOME_NORMAL, HOME_FOCUS, HOME, <HomePage/> )}
+			let tabBarHeight = 0;
+			var hn = this.state.hideNav ?
+					 (<TabNavigator
+							hidesTabTouch={true}
+							tabBarStyle={styles.tab}
+							tabBarStyle={{ height: tabBarHeight, overflow: 'hidden' }}
+							sceneStyle={{ paddingBottom: tabBarHeight }}
+						>
+						{this._renderTabItem(HOME_NORMAL, HOME_FOCUS, HOME, <HomePage _hideNav={this._hideNav.bind(this)} _showNav={this._showNav.bind(this)}  hideNav={this.state.hideNav}   /> )}
+						</TabNavigator>)
+						:
+						(<TabNavigator hidesTabTouch={true} tabBarStyle={styles.tab}>
+						{this._renderTabItem(HOME_NORMAL, HOME_FOCUS, HOME, <HomePage _hideNav={this._hideNav.bind(this)}  _showNav={this._showNav.bind(this)}  hideNav={this.state.hideNav} /> )}
 						{this._renderTabItem(CATEGORY_NORMAL, CATEGORY_FOCUS, CATEGORY, this._createChildView(CATEGORY)  )}
 						{this._renderTabItem(FAXIAN_NORMAL, FAXIAN_FOCUS, FAXIAN, <ShopIndex/>   )}
 						{this._renderTabItem(CART_NORMAL, CART_FOCUS, CART, <WSXPrj/>)}
-						{this._renderTabItem(PERSONAL_NORMAL, PERSONAL_FOCUS, PERSONAL,  <RegisterForm
-						setNav={this._setNav.bind(this)} itemPage={this.state.itemPage} />)}
-					</TabNavigator>);
+						{this._renderTabItem(PERSONAL_NORMAL, PERSONAL_FOCUS, PERSONAL,  <RegisterForm/>)}
+						</TabNavigator>);
 			
 		
 		 
         return (
-            <View style={{flex:1}}>
-					
-	       {tabnav}
-				
-
-				
-				
-            </View>
+					<View style={{flex:1}}>
+						{hn}
+					</View>
         );
     }
 }
@@ -123,7 +143,7 @@ var styles = StyleSheet.create({
 		backgroundColor: '#FFF',
 		alignItems: 'center',
 		borderTopWidth: 1,
-		borderTopColor:'#BBB'
+		borderTopColor:'#BBB',
 	},
 	tabIcon: {
         width: 30,  
@@ -131,7 +151,9 @@ var styles = StyleSheet.create({
         resizeMode: 'stretch',  
         marginTop: 10  
 	}
-	
-	
-	
 });
+
+
+
+
+

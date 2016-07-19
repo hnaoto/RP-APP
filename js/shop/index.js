@@ -20,69 +20,77 @@ import {
 
 
 import Drawer from 'react-native-drawer'
-import ControlPanel from './ControlPanel'
 import Main from './Main.ScrollableTabView'
 import SearchBar from './SearchBar';
 
 
+import ProductPage from './Products';
+import ReviewPage from './Reviews';
+import ShopDetailPage from './ShopDetail';
+import ScrollableTabView, { DefaultTabBar, ScrollableTabBar } from 'react-native-scrollable-tab-view';
+
+
 export default class ShopView extends Component {
-  state={
-    drawerOpen: false,
-    drawerDisabled: false,
-  };
-  closeDrawer = () => {
-    this._drawer.close()
-  };
-  openDrawer = () => {
-    this._drawer.open()
-  };
-	
-	
-	
 
 	
-	
-	
+
+
   render() {
 	
 	
     return (
 		
-						
-      <Drawer
-        ref={(ref) => this._drawer = ref}
-        type="overlay"
-        content={
-          <ControlPanel closeDrawer={this.closeDrawer} />
-        }
-        acceptDoubleTap
-        styles={{main: {shadowColor: '#BBB', shadowOpacity: 0.3, shadowRadius: 15}}}
-        onOpen={() => {
-          console.log('onopen')
-          this.setState({drawerOpen: true})
-        }}
-        onClose={() => {
-          console.log('onclose')
-          this.setState({drawerOpen: false})
-        }}
-        tweenDuration={100}
-        panThreshold={0.08}
-        disabled={this.state.drawerDisabled}
-        openDrawerOffset={0.2}
-        panOpenMask={0.2}
-        negotiatePan
-        >
+		<View>
 			<SearchBar navigator={this.props.navigator}
 								 _showNav={this.props._showNav.bind(this)}
 								 hideNav={this.props.hideNav}/>
 
-      <Main gpsID={this.props.gpsID} 
+			<ScrollableTabView
+				style={{marginTop: 20, }}
+				renderTabBar={() => <DefaultTabBar />}>
+					<ProductPage 
+						tabLabel='店内产品' 
+						gpsID={this.props.gpsID}
 						navigator={this.props.navigator}
-						_hideNav={this.props._hideNav.bind(this)}
 						_showNav={this.props._showNav.bind(this)}
-						hideNav={this.props.hideNav}/>
-      </Drawer>
+						_hideNav={this.props._hideNav.bind(this)}/>
+					<ReviewPage tabLabel='用户评价' />
+					<ShopDetailPage tabLabel='店铺详情' />
+			</ScrollableTabView>
+    </View>
     )
   }
 }
+
+
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: 30,
+  },
+  tabView: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: 'rgba(0,0,0,0.01)',
+  },
+  card: {
+    borderWidth: 1,
+    backgroundColor: '#fff',
+    borderColor: 'rgba(0,0,0,0.1)',
+    margin: 5,
+    height: 150,
+    padding: 15,
+    shadowColor: '#ccc',
+    shadowOffset: { width: 2, height: 2, },
+    shadowOpacity: 0.5,
+    shadowRadius: 3,
+  },
+  icon: {
+    width: 300,
+    height: 300,
+    alignSelf: 'center',
+  },
+})
 
