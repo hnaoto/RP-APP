@@ -51,7 +51,7 @@ export default class Cart extends React.Component {
 		
 				if (keys != null) {
 				var SP_keys = keys.filter(function(key){
-						return key.startsWith('SP-');
+						return key.startsWith('BC-P');
 						
 				});
 				
@@ -85,11 +85,17 @@ export default class Cart extends React.Component {
 	_renderProduct(product) {
 		
 	 return(
-		 
-			<TouchableOpacity
-				onPress={() => this._productRowPressed(product)}>
+
 			
-		
+			<View>
+			
+			
+			<View style={styles_list.shopContainer}>
+			<Text>
+			 xxxxx店名
+			</Text>
+			</View>
+			
       <View style={styles_list.container}>
         <Image
           source={ require('../shop/images/product/none.jpg')}
@@ -122,10 +128,13 @@ export default class Cart extends React.Component {
 				
 				</View>
 				
+				
 
 				
       </View>
-			</TouchableOpacity>
+			
+			</View>
+			
 		);
 	}
 
@@ -152,7 +161,7 @@ export default class Cart extends React.Component {
 		}
 		
 		return (
-			<View>
+			<View style={styles.container}>
 				{productList}
 			</View>
 		
@@ -225,7 +234,16 @@ var styles_list = StyleSheet.create({
 		color: '#FFF',
 		fontSize: 12,
 		fontWeight: '900',
-	}
+	},
+	shopContainer: {
+		borderBottomColor: '#ECECFB',
+		borderBottomWidth: 1,
+		paddingLeft: 2,
+		paddingTop: 5,
+		paddingBottom: 5,
+		
+	
+	},
 });
 
 

@@ -30,7 +30,7 @@ export default class ProductPanel extends React.Component {
 		
 	
 	
-		
+		this.props.product['cart_count'] = 1;
 		
 		this.state = {
 			product : this.props.product,
@@ -54,35 +54,33 @@ export default class ProductPanel extends React.Component {
 
 		var _this = this;
 		var sum = 0;
+		let a = {};
 		
 		try {
-			await AsyncStorage.getAllKeys(function(err, keys){
-				var BCP_keys = keys.filter(function(key){
-					return key.startsWith('BC-P');
-				});
-				console.log(BCP_keys);
-				
-				
-				AsyncStorage.multiGet(BCP_keys, (err, stores) => {
-					stores.map((result, i, store) => {
-						console.log(store[i][1]['cart_count']);
-						sum += store[i][1]['cart_count'];
-									
-						_this.setState({
-							count : sum
-						});
-						
-						
-					});
-				});
+		//	var value = await AsyncStorage.getItem('BC-P-ID' + this.state.product.id);
+		//	if (value !== null){
+	//			this.setState({product: JSON.parse(value)});
+		//	}
+		
 			
-				
-				
-				
-				
-	
+			var keys = await AsyncStorage.getAllKeys();
+			var BCP_keys = keys.filter(function(key){
+					return key.startsWith('BC-P');
 			});
+		 console.log(BCP_keys);
+		var stores = await AsyncStorage.multiGet(BCP_keys);
+		 stores.map((result, i, store) => {
+			let value = JSON.parse(store[i][1]);
+			sum += value.cart_count;
+						
+		 });
+			
 
+		this.setState({
+			count: sum,
+		});
+				
+		
 
 
 		
@@ -105,53 +103,54 @@ export default class ProductPanel extends React.Component {
 			count : t
 		});
 		
-
+		
+		
+		//this.state.product.cart_count +=1;
+		//let updatedProduct = this.state.product;
+		
+		
+		
+		//	var value = await AsyncStorage.getItem('BC-P-ID' + this.state.product.id);
+	//		if (value !== null){
+			
+			
+	//			this.setState({product: JSON.parse(value)});
+		// 	}
+		
+		
+	//	AsyncStorage.mergeItem('BC-P-ID' + _this.state.product.id, JSON.stringify(updatedProduct), () => {
+		//			console.log(this.state.product)
+		//});
+		
+		
+		
+		
+		
 		try {
+			var value = await AsyncStorage.getItem('BC-P-ID' + this.state.product.id);
+			if (value !== null){
+			  var tp = JSON.parse(value).cart_count;
+				let updatedProduct = { cart_count : tp + 1 };
+				await AsyncStorage.mergeItem('BC-P-ID' + _this.state.product.id, JSON.stringify(updatedProduct))
+			} else{
+				 await AsyncStorage.setItem('BC-P-ID' + this.state.product.id, JSON.stringify(this.state.product));
 			
-			//await AsyncStorage.setItem('BC-P-ID' + this.state.product.id, JSON.stringify(this.state.product));
 			
-			//var value = await AsyncStorage.getItem('BC-P-ID' + _this.state.product.id);
-			//if (value !== null){
-				//console.log(value);
-				
-				
-				
+			}
+			
+		 	
 
-			//}
-			
-			
-			
-
-			
-			
-			AsyncStorage.getItem('BC-P-ID' + _this.state.product.id, (err, result) => {
-			
-				if(result != null){
-					console.log(result.cart_count);
-					let updatedProduct = { cart_count : 11 };
-					AsyncStorage.mergeItem('BC-P-ID' + _this.state.product.id, JSON.stringify(updatedProduct), () => {
-				
-					});
-					
-				
-				} else{
-					this.state.product['cart_count'] = 1;
-					AsyncStorage.setItem('BC-P-ID' + this.state.product.id, JSON.stringify(this.state.product));
-				}
-
-				
-			});
-			
-	
-
-			
-			
-			
-		}
-		catch (error) {
-			//this._appendMessage('AsyncStorage error: ' + error.message);
+		
+		
+		} catch(error){
+		
 			console.log(error.message);
 		}
+		
+		
+		
+
+	
 		
 
 	}

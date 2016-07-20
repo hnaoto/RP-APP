@@ -141,7 +141,7 @@ export default class ProductPage extends Component {
 
 	render() {
     return (
-			<View>
+			<View style={styles.container}>
 			
 				<ListView
 					dataSource={this.state.dataSource}
@@ -159,6 +159,14 @@ export default class ProductPage extends Component {
 
 
 
+
+var styles = StyleSheet.create({
+	container: {
+		flex : 1,
+	},
+
+
+});
 
 var styles_list = StyleSheet.create({
   container: {

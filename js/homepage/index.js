@@ -37,6 +37,9 @@ export default class HomePage extends React.Component {
     return (
     <NavigatorIOS
 			style={styles.container}
+			barTintColor='#999'
+			titleTextColor='#fff'
+			tintColor='#fff'
     	initialRoute={{
        	title: 'initRoute',
        	component: Content,
@@ -55,13 +58,11 @@ export default class HomePage extends React.Component {
 
 const styles = StyleSheet.create({
 	text: {
-  	color: 'black',
-    backgroundColor: 'white',
-    fontSize: 30,
-    margin: 80
+	
   },
   container: {
-    flex: 1
+    flex: 1,
+		height: 30,
   }
 });
 

@@ -46,7 +46,7 @@ export default class ShopView extends Component {
 								 hideNav={this.props.hideNav}/>
 
 			<ScrollableTabView
-				style={{marginTop: 20, }}
+				style={{marginTop: 20, flex:1,}}
 				renderTabBar={() => <DefaultTabBar />}>
 					<ProductPage 
 						tabLabel='店内产品' 

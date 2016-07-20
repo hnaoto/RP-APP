@@ -63,12 +63,12 @@ export default class Content extends React.Component {
   }
 
 	
-	componentWillReceiveProps(){
-		if (this.props.navigator.navigationContext.currentRoute.title == 'initRoute') {
-			console.log('update')
-		}
+//	componentWillReceiveProps(){
+	//	if (this.props.navigator.navigationContext.currentRoute.title == 'initRoute') {
+	//		console.log('update')
+	//	}
 	
-	}
+//	}
 
 
 
