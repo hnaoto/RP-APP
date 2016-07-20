@@ -131,7 +131,7 @@ export default class ProductPanel extends React.Component {
 			if (value !== null){
 			  var tp = JSON.parse(value).cart_count;
 				let updatedProduct = { cart_count : tp + 1 };
-				await AsyncStorage.mergeItem('BC-P-ID' + _this.state.product.id, JSON.stringify(updatedProduct))
+				await AsyncStorage.mergeItem('BC-P-ID' + _this.state.product.id, JSON.stringify(updatedProduct));
 			} else{
 				 await AsyncStorage.setItem('BC-P-ID' + this.state.product.id, JSON.stringify(this.state.product));
 			
@@ -219,7 +219,7 @@ export default class ProductPanel extends React.Component {
 
 var styles = StyleSheet.create({
   container: {
-    height: 60,
+    height: 47,
 		backgroundColor: '#365F4E',
 		flexDirection: 'row',
 		position:'relative',
@@ -231,7 +231,7 @@ var styles = StyleSheet.create({
 		position: 'absolute',
 		height:70,
 		width:70,
-		bottom:15,
+		bottom:2,
 		right:20,
 	},
 	cart: {

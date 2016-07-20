@@ -19,33 +19,37 @@ import {
 
 
 
+import CartPanel from './CartPanel';
+
 
 
 export default class Cart extends React.Component {
-	
-	
-		
-		constructor(props){
-			super(props);
-			this.state = {
-				products:	[],
-				price: 0,
-				dataSource: new ListView.DataSource({
-					rowHasChanged: (row1, row2) => row1 !== row2,
-				}),
-			}
-		
+	constructor(props){
+		super(props);
+		this.state = {
+			products:	[],
+			price: 0,
+			dataSource: new ListView.DataSource({
+				rowHasChanged: (row1, row2) => row1 !== row2,
+			}),
+			subtotal: 0,
 		}
 		
-		componentWillMount() {
-			this._loadInitialSate().done()
-		}
+	}
+		
+	
+	
+	componentDidMount() {
+		this._loadInitialSate().done()
+	}
 	
 
+	
 		
 		
 		async _loadInitialSate() {
 			var _this = this;
+			var subtotal = 0;
 			try {
 				var keys = await AsyncStorage.getAllKeys();
 		
@@ -58,11 +62,15 @@ export default class Cart extends React.Component {
 				AsyncStorage.multiGet(SP_keys,function(errs,result){
                 var arr = [];
                 for(var i in result){
-                    arr.push(JSON.parse(result[i][1]));
+										let value = JSON.parse(result[i][1]);
+                    arr.push(value);
+										subtotal += (value.price * value.cart_count);
                 }
+								
                 _this.setState({
                     products:arr,
 										dataSource: _this.state.dataSource.cloneWithRows(arr),
+										subtotal: subtotal,
                 });
             });
 				
@@ -79,15 +87,63 @@ export default class Cart extends React.Component {
 		}
 	
 		
+	_incrementPress(product) {
+	
+
+		this._updateProduct(product);
+		
+		
+		
+		
+	}
+	
+	
+	async _updateProduct(product){
+	
+			try{
+			var value = await AsyncStorage.getItem('BC-P-ID' + product.id);
+			if (value !== null){
+				var tp = JSON.parse(value).cart_count;
+				let updatedProduct = { cart_count : tp + 1 };
+				await AsyncStorage.mergeItem('BC-P-ID' + product.id, JSON.stringify(updatedProduct));
+			//this._loadInitialSate();
+
+
+				var ps = this.state.products;
+				var i = ps.indexOf(product);
+				//product['cart_count'] +=1;
+				//console.log(product);
+				
+				//this.state.dataSource.find(x=> x.id === product.id)
+				//var complement = this.state.products.filter(function(obj){ return obj.id != product.id});
+				//complement.push(product);
+				
+				ps[i].cart_count += 1;;
+				
+				console.log(ps);
+				
+				this.setState({
+					products: ps,
+					dataSource: this.state.dataSource.cloneWithRows(ps),
+				});
 			
+		}
+			
+		
+		} catch(error) {
+		
+			console.log(error.message);
+		}
+			
+	}
 			
 			
 	_renderProduct(product) {
 		
 	 return(
 
-			
-			<View>
+	 
+			<View style={styles_list.container}>
 			
 			
 			<View style={styles_list.shopContainer}>
@@ -96,7 +152,7 @@ export default class Cart extends React.Component {
 			</Text>
 			</View>
 			
-      <View style={styles_list.container}>
+      <View style={styles_list.mainContainer}>
         <Image
           source={ require('../shop/images/product/none.jpg')}
           style={styles_list.thumbnail}
@@ -119,9 +175,19 @@ export default class Cart extends React.Component {
 							{product.basic_info.size}
 						</Text>
 					
+					
+					
 						<Text style={styles_list.rating}>
-							★★★★☆
+							{product.cart_count}
 						</Text>
+					
+					<TouchableOpacity
+						onPress = {() =>this._incrementPress(product)}>
+						<Text>
+							+
+						</Text>
+					</TouchableOpacity>
+					
 					
 					</View>
 				
@@ -146,6 +212,7 @@ export default class Cart extends React.Component {
 
 
 		var productList = null;
+		var cartPanel = null;
 		var price = 0;
 		if(this.state.products.length!=0){
 		
@@ -155,14 +222,23 @@ export default class Cart extends React.Component {
 					renderRow={this._renderProduct.bind(this)}
 					style={styles_list.listView}
        />);
+			
+			
+			cartPanel = (<CartPanel
+										subtotal={this.state.subtotal}/>);
 	
 	
 
 		}
 		
 		return (
+		
+		
 			<View style={styles.container}>
+			<ScrollView>
 				{productList}
+			</ScrollView>
+				{cartPanel}
 			</View>
 		
 		
@@ -180,9 +256,18 @@ export default class Cart extends React.Component {
 
 
 var styles_list = StyleSheet.create({
-  container: {
+	container: {
+		height: 150,
+		flex:1,
+		backgroundColor:'#FFF',
+		borderColor: '#F8F8F8',
+		borderWidth: 1,
+		
+	
+	},
+  mainContainer: {
     flexDirection: 'row',
-		borderBottomColor: '#ECECFB',
+		borderBottomColor: '#F8F8F8',
 		borderBottomWidth: 1,
 		paddingLeft: 2,
 		paddingTop: 5,
@@ -248,85 +333,9 @@ var styles_list = StyleSheet.create({
 
 
 var styles = StyleSheet.create({
-    container : {
-        flex: 1
-    },
-
-    row : {
-        flexDirection: 'row',
-        marginBottom: 10,
-    },
-
-    item : {
-        flex: 1,
-        marginLeft:5,
-        borderWidth: 1,
-        borderColor: '#ddd',
-        marginRight: 5,
-        height: 100,
-    },
-
-    img: {
-        flex: 1,
-        backgroundColor: 'transparent',
-    },
-
-    item_text: {
-        backgroundColor: '#000',
-        opacity:0.7,
-        color:'#fff',
-        height:25,
-        lineHeight:18,
-        textAlign:'center',
-        marginTop:74
-    },
-
-    btn: {
-        backgroundColor: '#ff7200',
-        height: 33,
-        textAlign : 'center',
-        color: '#fff',
-        marginLeft:10,
-        marginRight: 10,
-        lineHeight: 24,
-        marginTop: 40,
-        fontSize: 18,
-    },
-
-    list_item : {
-        marginLeft: 5,
-        marginRight: 5,
-        padding:5 ,
-        borderWidth: 1,
-        height: 30,
-        borderRadius: 3,
-        borderColor: '#ddd',
-    },
-
-    list_item_desc : {
-        flex: 2,
-        fontSize: 15,
-    },
-
-    list_item_price: {
-        flex: 1,
-        textAlign: 'right',
-        fontSize: 15,
-    },
-
-    clear: {
-        marginTop : 10,
-        backgroundColor: '#fff',
-        color: '#000',
-        borderColor: '#ddd',
-        borderWidth:1,
-        marginLeft: 10,
-        marginRight:10,
-        lineHeight: 24,
-        height:33,
-        fontSize: 18,
-        textAlign: 'center',
-
-    }
+	container: {
+		flex:1,
+  },
+	
 
 });
