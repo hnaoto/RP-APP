@@ -20,10 +20,18 @@ import {
 import Cart from '../cart/index';
 
 
+
+
+
 export default class ProductPanel extends React.Component {
 
 	constructor(props) {
 		super(props);
+		
+	
+	
+		
+		
 		this.state = {
 			product : this.props.product,
 			count: 0,
@@ -43,29 +51,53 @@ export default class ProductPanel extends React.Component {
 	
 	
 	async _loadInitialSate(){
+
 		var _this = this;
+		var sum = 0;
+		
 		try {
 			await AsyncStorage.getAllKeys(function(err, keys){
-			
-				var SP_keys = keys.filter(function(key){
-					return key.startsWith('SP-');
+				var BCP_keys = keys.filter(function(key){
+					return key.startsWith('BC-P');
 				});
+				console.log(BCP_keys);
 				
-				_this.setState({
-					count : SP_keys.length
+				
+				AsyncStorage.multiGet(BCP_keys, (err, stores) => {
+					stores.map((result, i, store) => {
+						console.log(store[i][1]['cart_count']);
+						sum += store[i][1]['cart_count'];
+									
+						_this.setState({
+							count : sum
+						});
+						
+						
+					});
 				});
+			
+				
+				
+				
+				
+	
 			});
 
 
+
+		
 		} catch(error) {
 			console.log(error.message);
 		}
-	
 	}
+	
+	
+	
 		
 	async _addToCartPress(data) {
 	
 		
+		var _this = this;
 		var t = this.state.count;
 		t += 1;
 
@@ -73,9 +105,48 @@ export default class ProductPanel extends React.Component {
 			count : t
 		});
 		
-		
+
 		try {
-			await AsyncStorage.setItem('SP-' + this._genID() + '-SP', JSON.stringify(this.state.product));
+			
+			//await AsyncStorage.setItem('BC-P-ID' + this.state.product.id, JSON.stringify(this.state.product));
+			
+			//var value = await AsyncStorage.getItem('BC-P-ID' + _this.state.product.id);
+			//if (value !== null){
+				//console.log(value);
+				
+				
+				
+
+			//}
+			
+			
+			
+
+			
+			
+			AsyncStorage.getItem('BC-P-ID' + _this.state.product.id, (err, result) => {
+			
+				if(result != null){
+					console.log(result.cart_count);
+					let updatedProduct = { cart_count : 11 };
+					AsyncStorage.mergeItem('BC-P-ID' + _this.state.product.id, JSON.stringify(updatedProduct), () => {
+				
+					});
+					
+				
+				} else{
+					this.state.product['cart_count'] = 1;
+					AsyncStorage.setItem('BC-P-ID' + this.state.product.id, JSON.stringify(this.state.product));
+				}
+
+				
+			});
+			
+	
+
+			
+			
+			
 		}
 		catch (error) {
 			//this._appendMessage('AsyncStorage error: ' + error.message);
