@@ -35,7 +35,6 @@ export default class ProductPanel extends React.Component {
 		this.state = {
 			product : this.props.product,
 			count: 0,
-		
 		}
 
 	}
@@ -132,6 +131,9 @@ export default class ProductPanel extends React.Component {
 			  var tp = JSON.parse(value).cart_count;
 				let updatedProduct = { cart_count : tp + 1 };
 				await AsyncStorage.mergeItem('BC-P-ID' + _this.state.product.id, JSON.stringify(updatedProduct));
+				
+				
+		
 			} else{
 				 await AsyncStorage.setItem('BC-P-ID' + this.state.product.id, JSON.stringify(this.state.product));
 			
@@ -154,14 +156,50 @@ export default class ProductPanel extends React.Component {
 		
 
 	}
+	
+	
+	
+	async _getAllProducts(){
+	
+	
+		try{
+			var keys = await AsyncStorage.getAllKeys();
+			var BCP_keys = keys.filter(function(key){
+					return key.startsWith('BC-P');
+			});
+		var data =  [];
+		var stores = await AsyncStorage.multiGet(BCP_keys);
+		 stores.map((result, i, store) => {
+			let value = JSON.parse(store[i][1]);
+		  data.push(value);
+			this.setState({
+				data: data,
+			});
+			
+						
+		 });
+		} catch(error) {
+			console.log(error.message);
+		}
+		
+	
+	}
 		
 
 
 	_goToCartPress(){
+		
 		this.props.navigator.push({
 		  component: Cart,
+			passProps: {products: this.state.data}
 		});
 	}
+	
+	
+	
+	
+	
+	
 	
 	_genID() {
 		return 'xxxxxxx-xxxx-2xxxx-bxxxxxxxxx'.replace(/[xy]/g,function(c){

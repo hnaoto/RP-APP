@@ -26,12 +26,19 @@ import CartPanel from './CartPanel';
 export default class Cart extends React.Component {
 	constructor(props){
 		super(props);
+		
+
 		this.state = {
 			products:	[],
 			price: 0,
-			dataSource: new ListView.DataSource({
-				rowHasChanged: (row1, row2) => row1 !== row2,
-			}),
+      dataSource: new ListView.DataSource({
+        rowHasChanged: (row1, row2) => {
+				console.log(row1);
+				console.log(row2);
+				row1 !== row2
+				},
+      }),
+			loaded: false,
 			subtotal: 0,
 		}
 		
@@ -48,6 +55,7 @@ export default class Cart extends React.Component {
 		
 		
 		async _loadInitialSate() {
+			console.log('called');
 			var _this = this;
 			var subtotal = 0;
 			try {
@@ -71,6 +79,7 @@ export default class Cart extends React.Component {
                     products:arr,
 										dataSource: _this.state.dataSource.cloneWithRows(arr),
 										subtotal: subtotal,
+										loaded: true,
                 });
             });
 				
@@ -87,45 +96,62 @@ export default class Cart extends React.Component {
 		}
 	
 		
-	_incrementPress(product) {
+	_incrementPress(product, rowID) {
 	
 
-		this._updateProduct(product);
+		this._updateProduct(product, rowID, true);
+		
+		
+		
 		
 		
 		
 		
 	}
 	
+	_decrementPress(product) {
+		this._updateProduct(product, false);
+		
+	}
 	
-	async _updateProduct(product){
 	
+	async _updateProduct(product, rowID, increment){
+		var diff = increment ? 1 : (-1);
+		var _this = this;
 			try{
 			var value = await AsyncStorage.getItem('BC-P-ID' + product.id);
 			if (value !== null){
 				var tp = JSON.parse(value).cart_count;
-				let updatedProduct = { cart_count : tp + 1 };
+				let updatedProduct = { cart_count : tp + diff};
 				await AsyncStorage.mergeItem('BC-P-ID' + product.id, JSON.stringify(updatedProduct));
-			//this._loadInitialSate();
+				//this._loadInitialSate();
 
 
-				var ps = this.state.products;
-				var i = ps.indexOf(product);
+				
+				var newArray = this.state.products.slice();
+			
 				//product['cart_count'] +=1;
 				//console.log(product);
 				
-				//this.state.dataSource.find(x=> x.id === product.id)
+				//this.state.products.find(x=> x.id === product.id)
 				//var complement = this.state.products.filter(function(obj){ return obj.id != product.id});
 				//complement.push(product);
 				
-				ps[i].cart_count += 1;;
+				//ps[rowID].cart_count += 1;
 				
-				console.log(ps);
+
 				
-				this.setState({
-					products: ps,
-					dataSource: this.state.dataSource.cloneWithRows(ps),
+				newArray[rowID].cart_count =  product.cart_count+1,
+				console.log(newArray);
+				
+			
+				
+				_this.setState({
+					dataSource: _this.state.dataSource.cloneWithRows(newArray),
+					products: newArray,
 				});
+				
+		
 			
 		}
 			
@@ -136,9 +162,28 @@ export default class Cart extends React.Component {
 		}
 			
 	}
+	
+	_delete() {
+	
+	
+	}
+	
+ onCollapse(rowID) {
+    var newArray = this.state.products.slice();
+    newArray[rowID] = {
+        key: newArray[rowID].key,
+        details: newArray[rowID].details,
+        isCollapsed: newArray[rowID].isCollapsed == false ? true : false,
+    };
+    this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(newArray),
+        db: newArray,
+    });
+}
+
 			
-			
-	_renderProduct(product) {
+	_renderProduct(product, sectionID, rowID) {
+
 		
 	 return(
 
@@ -182,7 +227,7 @@ export default class Cart extends React.Component {
 						</Text>
 					
 					<TouchableOpacity
-						onPress = {() =>this._incrementPress(product)}>
+						onPress = {() =>this._incrementPress(product, rowID)}>
 						<Text>
 							+
 						</Text>
@@ -215,6 +260,7 @@ export default class Cart extends React.Component {
 		var cartPanel = null;
 		var price = 0;
 		if(this.state.products.length!=0){
+			console.log('render function');
 		
 			productList  = (
 					<ListView
