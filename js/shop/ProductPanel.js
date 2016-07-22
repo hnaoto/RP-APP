@@ -13,6 +13,7 @@ import {
   ListView,
   Image,
 	AsyncStorage,
+	TouchableHighlight,
 } from 'react-native';
 
 
@@ -229,17 +230,25 @@ export default class ProductPanel extends React.Component {
 				</View>
 			</TouchableOpacity>
 			
-			<TouchableOpacity
+			<TouchableHighlight
 				onPress={() =>this._goToCartPress()}
 				style={styles.cartContainer}>
 				<Image
 						source={require('./images/product/cart.png')}
 						style={styles.cart}/>
 						
-		  </TouchableOpacity>
-				<Text>
+						
+						
+		  </TouchableHighlight>
+			
+			
+			<View style={styles.countContainer}>
+				<Text style={styles.countText}>
 					{this.state.count}
 				</Text>
+			</View>
+			
+
 
 	
 			</View>
@@ -271,6 +280,22 @@ var styles = StyleSheet.create({
 		width:70,
 		bottom:2,
 		right:20,
+	},
+	countContainer: {
+		position: 'absolute',
+		height:16,
+		width:16,
+		bottom:55,
+		right:70,
+		backgroundColor: '#B20000',
+		borderRadius: 8,
+	},
+	countText: {
+	 color: '#FFFFFF',
+	 fontSize: 12,
+	 lineHeight:16,
+	 textAlign: 'center',
+	 backgroundColor: 'transparent',
 	},
 	cart: {
 		height:70,

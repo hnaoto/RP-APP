@@ -33,13 +33,11 @@ export default class Cart extends React.Component {
 			price: 0,
       dataSource: new ListView.DataSource({
         rowHasChanged: (row1, row2) => {
-				console.log(row1);
-				console.log(row2);
-				row1 !== row2
+					return true;
 				},
       }),
-			loaded: false,
 			subtotal: 0,
+			productKeys: [],
 		}
 		
 	}
@@ -55,7 +53,6 @@ export default class Cart extends React.Component {
 		
 		
 		async _loadInitialSate() {
-			console.log('called');
 			var _this = this;
 			var subtotal = 0;
 			try {
@@ -74,12 +71,13 @@ export default class Cart extends React.Component {
                     arr.push(value);
 										subtotal += (value.price * value.cart_count);
                 }
+								console.log(arr);
 								
                 _this.setState({
                     products:arr,
 										dataSource: _this.state.dataSource.cloneWithRows(arr),
 										subtotal: subtotal,
-										loaded: true,
+										productKeys: SP_keys,
                 });
             });
 				
@@ -101,89 +99,69 @@ export default class Cart extends React.Component {
 
 		this._updateProduct(product, rowID, true);
 		
-		
-		
-		
-		
-		
-		
 	}
 	
-	_decrementPress(product) {
-		this._updateProduct(product, false);
+	_decrementPress(product, rowID) {
+		this._updateProduct(product, rowID, false);
 		
 	}
 	
 	
 	async _updateProduct(product, rowID, increment){
 		var diff = increment ? 1 : (-1);
-		var _this = this;
+		
 			try{
 			var value = await AsyncStorage.getItem('BC-P-ID' + product.id);
 			if (value !== null){
 				var tp = JSON.parse(value).cart_count;
 				let updatedProduct = { cart_count : tp + diff};
 				await AsyncStorage.mergeItem('BC-P-ID' + product.id, JSON.stringify(updatedProduct));
-				//this._loadInitialSate();
-
 
 				
-				var newArray = this.state.products.slice();
-			
-				//product['cart_count'] +=1;
-				//console.log(product);
+				var _ds = this.state.products.slice();
+				_ds[rowID].cart_count = product.cart_count + diff;
 				
-				//this.state.products.find(x=> x.id === product.id)
-				//var complement = this.state.products.filter(function(obj){ return obj.id != product.id});
-				//complement.push(product);
+				var _subtotal = this.state.subtotal + diff * product.price;
 				
-				//ps[rowID].cart_count += 1;
-				
-
-				
-				newArray[rowID].cart_count =  product.cart_count+1,
-				console.log(newArray);
-				
-			
-				
-				_this.setState({
-					dataSource: _this.state.dataSource.cloneWithRows(newArray),
-					products: newArray,
+				this.setState({
+					dataSource: this.state.dataSource.cloneWithRows(_ds),
+					products: _ds,
+					subtotal: _subtotal,
 				});
-				
-		
 			
-		}
+			}
 			
 		
 		} catch(error) {
-		
 			console.log(error.message);
 		}
 			
 	}
 	
-	_delete() {
 	
 	
+	async _clearCart() {
+		try{
+			await AsyncStorage.multiRemove(this.state.productKeys);
+			
+			this.setState({
+				dataSource: this.state.dataSource.cloneWithRows([]),
+				products: [],
+				subtotal: 0,
+			});
+		}catch(error){
+			console.log(error.message);
+		}
+	
+	
+		
 	}
 	
- onCollapse(rowID) {
-    var newArray = this.state.products.slice();
-    newArray[rowID] = {
-        key: newArray[rowID].key,
-        details: newArray[rowID].details,
-        isCollapsed: newArray[rowID].isCollapsed == false ? true : false,
-    };
-    this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(newArray),
-        db: newArray,
-    });
-}
+
 
 			
 	_renderProduct(product, sectionID, rowID) {
-
+	
 		
 	 return(
 
@@ -192,9 +170,9 @@ export default class Cart extends React.Component {
 			
 			
 			<View style={styles_list.shopContainer}>
-			<Text>
-			 xxxxx店名
-			</Text>
+				<Text style={styles_list.shopText}>
+					xxxxx店名
+				</Text>
 			</View>
 			
       <View style={styles_list.mainContainer}>
@@ -205,33 +183,44 @@ export default class Cart extends React.Component {
 					<View style={styles_list.rightContainer}>
 					<View style={styles_list.titleContainer}>
 						<Text style={styles_list.name}>
-							{product.basic_info.name}
+							{product.basic_info.name} {product.basic_info.size}
 						</Text>
 						<Text style={styles_list.price}>¥{product.price}</Text>
 					</View>
 					
 	
 					
+					<View style={styles_list.buttonContainer}>
+					
+						<TouchableOpacity
+							onPress = {() =>this._incrementPress(product, rowID)}>
+							<Text style={styles_list.symbolText}> ＋ </Text>
+						</TouchableOpacity>
+	
+	
+						<View style={styles_list.countContainer}>
+							<Text style={styles_list.countText}> {product.cart_count} </Text>
+						</View>
+					
+					 <TouchableOpacity
+							onPress = {() =>this._decrementPress(product, rowID)}>
+							<Text style={styles_list.symbolText}> － </Text>
+						</TouchableOpacity>
+
+					</View>
+					
+					
 					
 					<View style={styles_list.verticalContainer}>
 					
 					
-						<Text>
-							{product.basic_info.size}
-						</Text>
+	
 					
+
+
+	
 					
-					
-						<Text style={styles_list.rating}>
-							{product.cart_count}
-						</Text>
-					
-					<TouchableOpacity
-						onPress = {() =>this._incrementPress(product, rowID)}>
-						<Text>
-							+
-						</Text>
-					</TouchableOpacity>
+		
 					
 					
 					</View>
@@ -258,10 +247,7 @@ export default class Cart extends React.Component {
 
 		var productList = null;
 		var cartPanel = null;
-		var price = 0;
-		if(this.state.products.length!=0){
-			console.log('render function');
-		
+		if(this.state.products.length != 0){
 			productList  = (
 					<ListView
 					dataSource={this.state.dataSource}
@@ -271,7 +257,8 @@ export default class Cart extends React.Component {
 			
 			
 			cartPanel = (<CartPanel
-										subtotal={this.state.subtotal}/>);
+										subtotal={this.state.subtotal}
+										_clearCart={this._clearCart.bind(this)}/>);
 	
 	
 
@@ -313,12 +300,10 @@ var styles_list = StyleSheet.create({
 	},
   mainContainer: {
     flexDirection: 'row',
-		borderBottomColor: '#F8F8F8',
-		borderBottomWidth: 1,
 		paddingLeft: 2,
 		paddingTop: 5,
 		paddingBottom: 5,
-		height: 90
+		height: 120,
   },
   rightContainer: {
     flex: 1,
@@ -367,20 +352,52 @@ var styles_list = StyleSheet.create({
 		fontWeight: '900',
 	},
 	shopContainer: {
-		borderBottomColor: '#ECECFB',
-		borderBottomWidth: 1,
 		paddingLeft: 2,
 		paddingTop: 5,
 		paddingBottom: 5,
-		
-	
+		backgroundColor: '#FEFEFE',
+		height: 20,
 	},
+	shopText: {
+		fontSize: 16,
+		fontWeight: '500',
+		marginLeft: 10,
+		color: '#777777',
+	},
+	buttonContainer: {
+		flexDirection:'row',
+		backgroundColor: '#FFFFFF',
+		borderColor: '#A34021',
+		borderWidth: 1,
+		height: 25,
+		borderRadius: 5,
+		width: 83,
+
+	},
+	countContainer:{
+		borderLeftColor: '#A34021',
+		borderRightColor: '#A34021',
+		borderLeftWidth: 1,
+		borderRightWidth: 1,
+	},
+	countText: {
+		color: '#A34021',
+		fontSize: 16,
+		paddingLeft: 5,
+		paddingRight: 5,
+	},
+	symbolText: {
+		color: '#A34021',
+		fontSize: 16,
+	}
 });
 
 
 var styles = StyleSheet.create({
 	container: {
 		flex:1,
+		backgroundColor: '#F8F8F8',
+		
   },
 	
 

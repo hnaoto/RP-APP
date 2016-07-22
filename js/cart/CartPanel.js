@@ -54,11 +54,12 @@ export default class CartPanel extends React.Component {
 
 				
 				
-					
+					<TouchableOpacity
+						onPress = {() =>this.props._clearCart()}>
 					<Text style={styles.payText}>
 						清空购物车
 					</Text>
-				
+				  </TouchableOpacity>
 				
 					<View style={styles.payContainer}>
 						<Text style={styles.payText}>
