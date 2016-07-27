@@ -10,6 +10,7 @@ import {
   Text,
   View,
   Image,
+  Navigator,
   AlertIOS,
   ScrollView,
   NavigatorIOS,
@@ -25,30 +26,24 @@ import Content from './content';
 
 
 
-export default class HomePage extends React.Component {
+export default class Account extends React.Component {
 
 
 
 
-	
-	
   render() {
     return (
 		
     
     <NavigatorIOS
 			style={styles.container}
-			barTintColor='#999'
-			titleTextColor='#fff'
+			barTintColor='#fff'
+			titleTextColor='#999'
 			tintColor='#fff'
     	initialRoute={{
-       	title: 'initRoute',
+       	title: 'accountRoute',
        	component: Content,
 				navigationBarHidden: true,
-        passProps: {
-					_hideNav: this.props._hideNav.bind(this),
-					_showNav: this.props._showNav.bind(this),
-				},
 			}}/>
 		);
   }

@@ -15,9 +15,9 @@ import {
 
 import TabNavigator from 'react-native-tab-navigator';
 import HomePage from './js/homepage/index';
-import RegisterForm from './js/accounts/register';
 import WSXPrj from './js/order/ShoppingCart';
 import ShopIndex from './js/shop/index';
+import Account from './js/account/index';
 
 
 
@@ -115,7 +115,7 @@ export default class MainScreen extends Component {
 						{this._renderTabItem(CATEGORY_NORMAL, CATEGORY_FOCUS, CATEGORY, this._createChildView(CATEGORY)  )}
 						{this._renderTabItem(FAXIAN_NORMAL, FAXIAN_FOCUS, FAXIAN, <ShopIndex/>   )}
 						{this._renderTabItem(CART_NORMAL, CART_FOCUS, CART, <WSXPrj/>)}
-						{this._renderTabItem(PERSONAL_NORMAL, PERSONAL_FOCUS, PERSONAL,  <RegisterForm/>)}
+						{this._renderTabItem(PERSONAL_NORMAL, PERSONAL_FOCUS, PERSONAL,  <Account/>)}
 						</TabNavigator>);
 			
 		
@@ -146,10 +146,10 @@ var styles = StyleSheet.create({
 		borderTopColor:'#BBB',
 	},
 	tabIcon: {
-        width: 30,  
-        height: 35,  
-        resizeMode: 'stretch',  
-        marginTop: 10  
+		width: 30,
+		height: 35,
+		resizeMode: 'stretch',
+		marginTop: 10  
 	}
 });
 

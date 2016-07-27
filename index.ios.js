@@ -10,7 +10,8 @@ import {
   StyleSheet,
   Text,
   View,
-  NavigatorIOS
+  NavigatorIOS,
+	StatusBar,
 } from 'react-native';
 
 
@@ -25,7 +26,9 @@ class rp extends Component {
   render() {
     return (
 
+
 		<MainScreen/>
+		
 
     );
   }

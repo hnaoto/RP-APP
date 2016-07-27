@@ -37,8 +37,8 @@ export default class Content extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-		 dataSource: new ListView.DataSource({
-        rowHasChanged: (row1, row2) => row1 !== row2,
+			dataSource: new ListView.DataSource({
+				rowHasChanged: (row1, row2) => row1 !== row2,
       }),
       items: [],
 			message: '',
