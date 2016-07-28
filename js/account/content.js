@@ -22,7 +22,7 @@ import Header from './Header';
 import LoginView from './login';
 import ProfileView from './profile';
 import Orders from './orders';
-
+import ConfigView from './config';
 
 
 export default class Content extends Component {
@@ -32,12 +32,19 @@ export default class Content extends Component {
 		this.state = ({
 			loggedIn: false,
 			TOKEN: '',
+			username: '登录/注册',
 		});
 		
-		this._loadInitState();
+
 		
 	}
 
+
+	componentDidMount(){
+	 this._loadInitState().done();
+	 
+	
+	}
 
 	_login(event) {
 		this.props.navigator.push({
@@ -55,6 +62,16 @@ export default class Content extends Component {
 		});
 	
 	}
+
+
+	_config(){
+		this.props.navigator.push({
+			component: ConfigView,
+		
+		});
+	
+	}
+
 	
 	
 	_orderOnPress() {
@@ -63,15 +80,26 @@ export default class Content extends Component {
 		});
 	}
 	
+	
+
+	
+
+	
+	
 	async _loadInitState(){
 		try{
 			var value = await AsyncStorage.getItem('AUTH_TOKEN');
 			
 			if (value != null){
 				this.setState({
-					TOKEN: value
+					TOKEN: value,
+					loggedIn: true,
 				});
 				window.TOKEN = value;
+				
+				
+				
+				
 			}
 			
 		} catch(error){
@@ -82,22 +110,52 @@ export default class Content extends Component {
 	}
 
 	
-
+	_headerView(){
+		var header = (<Header
+									TOKEN={this.state.TOKEN}
+									username={this.state.username}
+									_profileOnPress={this._login.bind(this)} />
+								);
+		
+		
+		if (this.state.loggedIn){
+			header =	(<Header
+									TOKEN={this.state.TOKEN}
+									username={this.state.username}
+									_profileOnPress={this._profile.bind(this)}
+									_profile={this._profile.bind(this)}
+									_config={this._config.bind(this)}/>);
+		
+		}
+		return header;
+	
+	}
 
 
 	render() {
 
+	
+		var header = this.state.loggedIn ?
+								(<Header
+									TOKEN={this.state.TOKEN}
+									username={this.state.username}
+									_profileOnPress={this._profile.bind(this)}
+									_profile={this._profile.bind(this)}
+									_config={this._config.bind(this)}/>)
+								:
+								(<Header
+									TOKEN={this.state.TOKEN}
+									username={this.state.username}
+									_profileOnPress={this._login.bind(this)} />
+								);
 		
 		return(
 		
-		
+			
 		
 		
 			<View style={styles.container}>
-				<Header
-					TOKEN={this.state.TOKEN}
-					_login={this._login.bind(this)}
-					_profile={this._profile.bind(this)}/>
+				{this._headerView()}
 					
 				<TouchableOpacity
 					style={styles.ordersButton}

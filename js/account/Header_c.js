@@ -28,7 +28,15 @@ export default class Header extends Component {
 
 
 	componentDidMount() {
-
+		console.log(window.TOKEN)
+		console.log(this.props.TOKEN);
+		if (typeof window.TOKEN != 'undefined') {
+			this.setState({
+				loggedIn: true,
+				username: '用户名',
+				
+			});
+		}
 	}
 	
 	componentWillReceiveProps(){
@@ -67,14 +75,14 @@ export default class Header extends Component {
 						style={styles.configImg}
 						/>
 				</TouchableOpacity>
-				<TouchableOpacity  onPress={() => this.props._profileOnPress()}>
+				<TouchableOpacity  onPress={() => this.props._login()}>
 				<View style={styles.profileContainer}>
 					<Image
 						source={this.state.profileImg.src}
 						style={styles.profileImg}/>
 				 </View>
 				 </TouchableOpacity>
-				<Text style={styles.username}> {this.props.username}</Text>
+				<Text style={styles.username}> {this.state.username}</Text>
 			</View>
 		
 
