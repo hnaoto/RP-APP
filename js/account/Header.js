@@ -28,6 +28,8 @@ export default class Header extends Component {
 
 
 	componentDidMount() {
+		console.log(window.TOKEN)
+		console.log(this.props.TOKEN);
 		if (typeof window.TOKEN != 'undefined') {
 			this.setState({
 				loggedIn: true,
@@ -35,29 +37,36 @@ export default class Header extends Component {
 				
 			});
 		}
+	}
 	
+	componentWillReceiveProps(){
+		if (typeof window.TOKEN != 'undefined') {
+			this.setState({
+				loggedIn: true,
+				username: '用户名',
+				
+			});
+		}
 	}
 	
 	
 	
 
 	
-	
 
-	
 	
 	
 
   render() {
 	
-
+	
 		
 	
 	
     return (
 		
 			<View style={styles.container}>
-				<TouchableOpacity  onPress={() => this.props._login()}>
+				<TouchableOpacity  onPress={() => this.props._profile()}>
 				<View style={styles.profileContainer}>
 					<Image
 						source={this.state.profileImg.src}
@@ -100,6 +109,10 @@ const styles = StyleSheet.create({
 		marginLeft: 10,
 		shadowColor: '#DDD',
 		shadowOpacity: 0.5,
+		shadowOffset: {
+      height: 1,
+      width: 0
+    }
 	},
 	profileImg: {
 		height: 65,

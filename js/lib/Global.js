@@ -1,6 +1,6 @@
 module.exports = {
   STORE_KEY: 'a56z0fzrNpl^2',
-  BASE_URL: 'http://someurl.com',
+  LOGIN_URL: 'http://rp-backend.herokuapp.com/api-token-auth/',
   COLOR: {
     ORANGE: '#C50',
     DARKBLUE: '#0F3274',

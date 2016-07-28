@@ -12,12 +12,17 @@ import {
   Image,
   NavigatorIOS,
   TouchableHighlight,
+	TouchableOpacity,
+	AsyncStorage,
 } from 'react-native';
 
 
 import MenuButton from './MenuButton';
 import Header from './Header';
 import LoginView from './login';
+import ProfileView from './profile';
+import Orders from './orders';
+
 
 
 export default class Content extends Component {
@@ -26,7 +31,10 @@ export default class Content extends Component {
 		super(props);
 		this.state = ({
 			loggedIn: false,
+			TOKEN: '',
 		});
+		
+		this._loadInitState();
 		
 	}
 
@@ -37,6 +45,42 @@ export default class Content extends Component {
 		
 		});
 	}
+	
+	
+	
+	_profile(){
+		this.props.navigator.push({
+			component: ProfileView,
+		
+		});
+	
+	}
+	
+	
+	_orderOnPress() {
+		this.props.navigator.push({
+			component: Orders,
+		});
+	}
+	
+	async _loadInitState(){
+		try{
+			var value = await AsyncStorage.getItem('AUTH_TOKEN');
+			
+			if (value != null){
+				this.setState({
+					TOKEN: value
+				});
+				window.TOKEN = value;
+			}
+			
+		} catch(error){
+			console.log(error.message);
+		}
+	
+	
+	}
+
 	
 
 
@@ -50,8 +94,18 @@ export default class Content extends Component {
 		
 		
 			<View style={styles.container}>
-				<Header  _login={this._login.bind(this)} />
-		
+				<Header
+					TOKEN={this.state.TOKEN}
+					_login={this._login.bind(this)}
+					_profile={this._profile.bind(this)}/>
+					
+				<TouchableOpacity
+					style={styles.ordersButton}
+					onPress={ () => this._orderOnPress()} >
+					<Text style={styles.ordersText}>查看所有订单</Text>
+				</TouchableOpacity>
+				
+				
 				<View style={styles.menuView}>
         <MenuButton renderIcon={require('./images/icon/payment.png')}
                     showText={'待付款'} tag={'unpaid'}
@@ -94,11 +148,28 @@ export default class Content extends Component {
 
 
 var styles = StyleSheet.create({
+	container: {
+		backgroundColor: '#F8F8F8',
+		flex: 1,
+		flexDirection: 'column',
+	},
 	menuView: {
-		marginTop: 95,
+		paddingTop: 5,
 		backgroundColor: '#FFFFFF',
     flexDirection: 'row',
-	}
+	},
+	ordersButton: {
+		backgroundColor: '#FFFFFF',
+		borderBottomWidth: 1,
+		borderBottomColor: '#EEEEEE',
+	},
+	ordersText: {
+		padding: 15,
+		fontSize: 14,
+		color: '#777',
+		textAlign: 'right',
+	
+	},
 
 
 

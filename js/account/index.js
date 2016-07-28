@@ -38,8 +38,8 @@ export default class Account extends React.Component {
     <NavigatorIOS
 			style={styles.container}
 			barTintColor='#fff'
-			titleTextColor='#999'
-			tintColor='#fff'
+			titleTextColor='#fff'
+			tintColor='#999'
     	initialRoute={{
        	title: 'accountRoute',
        	component: Content,
