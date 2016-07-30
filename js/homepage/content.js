@@ -21,6 +21,7 @@ var Swiper = require('react-native-swiper');
 import Header from './Header';
 import SearchBar from './SearchBar';
 import ShopView from '../shop/index';
+import * as GLOBAL from '../config/Global';
 
 
 
@@ -59,8 +60,13 @@ export default class Content extends React.Component {
 		
 		this._getNearbyShop();
 		
+
+	
 	
   }
+	
+	
+	
 
 	
 //	componentWillReceiveProps(){
@@ -69,6 +75,9 @@ export default class Content extends React.Component {
 	//	}
 	
 //	}
+
+
+
 
 
 

@@ -38,9 +38,12 @@ exports.get = function(url, headers, callback){
 			headers: headers ,
 		})
 		.then(response => response.json())
-		.then((responseData) => {
-			callback(responseData);
-		})
+		.then(
+			(responseData) => {
+			() => callback(responseData)
+			//callback(responseData);
+			}
+		)
 		.catch(error =>
 			this.setState({
 				message: '系统故障，请稍后重试' + error

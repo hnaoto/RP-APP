@@ -76,6 +76,7 @@ export default class Content extends Component {
 	
 	_orderOnPress() {
 		this.props.navigator.push({
+			title: '全部订单',
 			component: Orders,
 		});
 	}
