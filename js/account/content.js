@@ -130,7 +130,12 @@ export default class Content extends Component {
 		return header;
 	
 	}
-
+	
+	
+	_onMenuClick() {
+	
+	
+	}
 
 	render() {
 

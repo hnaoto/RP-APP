@@ -38,9 +38,9 @@ export default class HomePage extends React.Component {
     
     <NavigatorIOS
 			style={styles.container}
-			barTintColor='#999'
-			titleTextColor='#fff'
-			tintColor='#fff'
+			barTintColor='#fff'
+			titleTextColor='#999'
+			tintColor='#555'
     	initialRoute={{
        	title: 'initRoute',
        	component: Content,

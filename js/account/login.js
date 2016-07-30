@@ -21,7 +21,7 @@ import {
 } from 'react-native';
 
 
-import * as GLOBAL from '../lib/Global';
+import * as GLOBAL from '../config/Global';
 
 
 
