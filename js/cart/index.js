@@ -17,10 +17,10 @@ import {
 } from 'react-native';
 
 
-
-
+import Header from './Header';
 import CartPanel from './CartPanel';
-
+import SetAddress from './SetAddress';
+import PlaceOrder from './PlaceOrder';
 
 
 export default class Cart extends React.Component {
@@ -49,6 +49,8 @@ export default class Cart extends React.Component {
 	}
 	
 
+	
+	
 	
 		
 		
@@ -156,6 +158,34 @@ export default class Cart extends React.Component {
 	
 		
 	}
+	
+	
+	
+	_placeOrder()	{
+		
+		if (!this.state.address){
+	
+			this.props.navigator.push({
+				component: PlaceOrder,
+				title: '填写订单',
+		
+			})
+		
+		} else{
+		
+	
+			this.props.navigator.push({
+				component: SetAddress,
+				title: '添加地址',
+		
+			})
+			
+		}
+	
+	
+	
+	}
+	
 	
 
 
@@ -268,10 +298,13 @@ export default class Cart extends React.Component {
 		
 		
 			<View style={styles.container}>
-			<ScrollView>
-				{productList}
-			</ScrollView>
+				<Header/>
+				<ScrollView>
+					{productList}
+				</ScrollView>
+				
 				{cartPanel}
+				
 			</View>
 		
 		
@@ -290,11 +323,11 @@ export default class Cart extends React.Component {
 
 var styles_list = StyleSheet.create({
 	container: {
-		height: 150,
 		flex:1,
 		backgroundColor:'#FFF',
 		borderColor: '#F8F8F8',
 		borderWidth: 1,
+		flexDirection: 'column',
 		
 	
 	},

@@ -230,7 +230,7 @@ export default class ProductPanel extends React.Component {
 				</View>
 			</TouchableOpacity>
 			
-			<TouchableHighlight
+			<TouchableOpacity
 				onPress={() =>this._goToCartPress()}
 				style={styles.cartContainer}>
 				<Image
@@ -239,7 +239,7 @@ export default class ProductPanel extends React.Component {
 						
 						
 						
-		  </TouchableHighlight>
+		  </TouchableOpacity>
 			
 			
 			<View style={styles.countContainer}>

@@ -49,6 +49,7 @@ export default class Content extends Component {
 	_login(event) {
 		this.props.navigator.push({
 			component: LoginView,
+			title: '用户登录/注册',
 		
 		});
 	}
@@ -58,6 +59,7 @@ export default class Content extends Component {
 	_profile(){
 		this.props.navigator.push({
 			component: ProfileView,
+			title: '用户信息',
 		
 		});
 	
@@ -67,6 +69,7 @@ export default class Content extends Component {
 	_config(){
 		this.props.navigator.push({
 			component: ConfigView,
+			title: '账户设置',
 		
 		});
 	
@@ -76,8 +79,8 @@ export default class Content extends Component {
 	
 	_orderOnPress() {
 		this.props.navigator.push({
-			title: '全部订单',
 			component: Orders,
+			title: '全部订单',
 		});
 	}
 	

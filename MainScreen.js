@@ -18,6 +18,7 @@ import HomePage from './js/homepage/index';
 import WSXPrj from './js/order/ShoppingCart';
 import ShopIndex from './js/shop/index';
 import Account from './js/account/index';
+import Cart from './js/cart/index';
 
 
 
@@ -114,7 +115,7 @@ export default class MainScreen extends Component {
 						{this._renderTabItem(HOME_NORMAL, HOME_FOCUS, HOME, <HomePage _hideNav={this._hideNav.bind(this)}  _showNav={this._showNav.bind(this)}  hideNav={this.state.hideNav} /> )}
 						{this._renderTabItem(CATEGORY_NORMAL, CATEGORY_FOCUS, CATEGORY, this._createChildView(CATEGORY)  )}
 						{this._renderTabItem(FAXIAN_NORMAL, FAXIAN_FOCUS, FAXIAN, <ShopIndex/>   )}
-						{this._renderTabItem(CART_NORMAL, CART_FOCUS, CART, <WSXPrj/>)}
+						{this._renderTabItem(CART_NORMAL, CART_FOCUS, CART, <Cart/>)}
 						{this._renderTabItem(PERSONAL_NORMAL, PERSONAL_FOCUS, PERSONAL,  <Account/>)}
 						</TabNavigator>);
 			

@@ -38,13 +38,14 @@ export default class Account extends React.Component {
     <NavigatorIOS
 			style={styles.container}
 			barTintColor='#fff'
-			titleTextColor='#fff'
-			tintColor='#999'
+			titleTextColor='#555'
+			tintColor='#777'
     	initialRoute={{
-       	title: 'accountRoute',
+       	title: '',
        	component: Content,
 				navigationBarHidden: true,
 			}}/>
+			
 		);
   }
 	
@@ -58,8 +59,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-		height: 30,
-  }
+	}
 });
 
 
