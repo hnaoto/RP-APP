@@ -19,6 +19,7 @@ import {
 
 
 
+import Cart from '../cart/Content';
 import ProductPanel from './ProductPanel';
 
 export default class ProductView extends React.Component {
@@ -31,6 +32,19 @@ export default class ProductView extends React.Component {
 	
 	}
 	
+
+	_goToCartPress(){
+		
+		this.props.navigator.push({
+		  component: Cart,
+			passProps: {
+					products: this.state.data,
+					navigator: this.props.navigator,
+				}
+		});
+	}
+	
+
 
 
 	
@@ -57,7 +71,7 @@ export default class ProductView extends React.Component {
 				
 				<ProductPanel
 					product={product}
-					navigator={this.props.navigator}/>
+					_goToCartPress={this._goToCartPress.bind(this)}/>
       </View>
 			
 		);

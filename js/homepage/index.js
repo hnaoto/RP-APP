@@ -35,40 +35,6 @@ export default class HomePage extends React.Component {
 	
 	}
 	
-	
-
-
-
-	_loadAllProducts() {
-	
-		fetch(GLOBAL.ALL_PRODUCT_URL, {
-			method: 'GET',
-		})
-		.then(response => response.json())
-		.then(
-			(responseData) => {
-				console.log(responseData);
-			}
-		)
-		.catch(error =>
-			this.setState({
-				message: '系统故障，请稍后重试' + error
-		}));
-		
-
-	}
-	
-	
-	async _saveItem(data){
-		try {
-			await AsyncStorage.setItem('ALL_Products', JSON.Stringify(data));
-		} catch (error) {
-			// Error saving data
-		}
-	}
-	
-	
-	
 
 
 

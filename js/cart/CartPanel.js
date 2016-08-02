@@ -61,11 +61,18 @@ export default class CartPanel extends React.Component {
 					</Text>
 				  </TouchableOpacity>
 				
-					<View style={styles.payContainer}>
-						<Text style={styles.payText}>
-							去结算
-						</Text>
-					</View>
+				
+				
+				
+					<TouchableOpacity
+						onPress = {() =>this.props._placeOrder()}>
+						<View style={styles.payContainer}>
+							<Text style={styles.payText}>
+								去结算
+							</Text>
+						</View>
+				  </TouchableOpacity>
+					
 				</View>
 			
 			

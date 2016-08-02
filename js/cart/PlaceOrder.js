@@ -12,6 +12,7 @@ import {
   TouchableHighlight,
 	TouchableOpacity,
 	AsyncStorage,
+	ListView,
 } from 'react-native';
 
 
@@ -83,7 +84,14 @@ export default class PlaceOrder extends Component {
 	
 		return (
 		
-			
+			<View>
+				
+				
+				<View style={styles.cell}>
+					
+					
+				</View>
+			</View>
 		
 		
 		
@@ -94,3 +102,25 @@ export default class PlaceOrder extends Component {
 
 
 }
+
+
+
+
+
+
+var styles = StyleSheet.create({
+	container: {
+		flex:1,
+		backgroundColor: '#F8F8F8',
+		flexDirection: 'column',
+		
+  },
+	cell: {
+		backgroundColor: '#FFF',
+		flex: 1,
+		marginBottom: 20,
+		
+	}
+
+
+});

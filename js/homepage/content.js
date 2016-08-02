@@ -8,14 +8,12 @@ import {
   Text,
   View,
   Image,
-  Navigator,
-  AlertIOS,
-  ScrollView,
   NavigatorIOS,
   TextInput,
   Platform,
 	ListView,
-	TouchableOpacity
+	TouchableOpacity,
+	AsyncStorage,
 } from 'react-native';
 var Swiper = require('react-native-swiper');
 import Header from './Header';
@@ -34,7 +32,7 @@ var map_qr = '&keywords=%E4%B8%AD%E7%B2%AE%E5%AE%B6%E4%BD%B3%E5%BA%B7%E8%82%89%E
 
 
 
-export default class Content extends React.Component {
+export default class HomePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -44,6 +42,8 @@ export default class Content extends React.Component {
       items: [],
 			message: '',
 			rating: '',
+			TOKEN:'',
+			loggedIn: false,
     }
   }
 	
@@ -59,6 +59,7 @@ export default class Content extends React.Component {
     })
 		
 		this._getNearbyShop();
+		this._loadToken();
 		
 
 	
@@ -76,8 +77,25 @@ export default class Content extends React.Component {
 	
 //	}
 
-
-
+	async _loadToken(){
+		try{
+			var value = await AsyncStorage.getItem('AUTH_TOKEN');
+			
+			if (value != null){
+				this.setState({
+					TOKEN: value,
+					loggedIn: true,
+				});
+				window.TOKEN = value;
+			
+			}
+			
+		} catch(error){
+			console.log(error.message);
+		}
+	
+	
+	}
 
 
 

@@ -14,11 +14,10 @@ import {
 
 
 import TabNavigator from 'react-native-tab-navigator';
-import HomePage from './js/homepage/index';
-import WSXPrj from './js/order/ShoppingCart';
-import ShopIndex from './js/shop/index';
-import Account from './js/account/index';
-import Cart from './js/cart/index';
+import HomePage from './js/homepage/content';
+import Shop from './js/shop/index';
+import Account from './js/account/content';
+import Cart from './js/cart/Content';
 
 
 
@@ -106,17 +105,17 @@ export default class MainScreen extends Component {
 							hidesTabTouch={true}
 							tabBarStyle={styles.tab}
 							tabBarStyle={{ height: tabBarHeight, overflow: 'hidden' }}
-							sceneStyle={{ paddingBottom: tabBarHeight }}
-						>
-						{this._renderTabItem(HOME_NORMAL, HOME_FOCUS, HOME, <HomePage _hideNav={this._hideNav.bind(this)} _showNav={this._showNav.bind(this)}  hideNav={this.state.hideNav}   /> )}
+							sceneStyle={{ paddingBottom: tabBarHeight }}>
+						
+							{this._renderTabItem(HOME_NORMAL, HOME_FOCUS, HOME, <HomePage navigator={this.props.navigator} _hideNav={this._hideNav.bind(this)} _showNav={this._showNav.bind(this)}  hideNav={this.state.hideNav}   /> )}
 						</TabNavigator>)
 						:
 						(<TabNavigator hidesTabTouch={true} tabBarStyle={styles.tab}>
-						{this._renderTabItem(HOME_NORMAL, HOME_FOCUS, HOME, <HomePage _hideNav={this._hideNav.bind(this)}  _showNav={this._showNav.bind(this)}  hideNav={this.state.hideNav} /> )}
-						{this._renderTabItem(CATEGORY_NORMAL, CATEGORY_FOCUS, CATEGORY, this._createChildView(CATEGORY)  )}
-						{this._renderTabItem(FAXIAN_NORMAL, FAXIAN_FOCUS, FAXIAN, <ShopIndex/>   )}
-						{this._renderTabItem(CART_NORMAL, CART_FOCUS, CART, <Cart/>)}
-						{this._renderTabItem(PERSONAL_NORMAL, PERSONAL_FOCUS, PERSONAL,  <Account/>)}
+							{this._renderTabItem(HOME_NORMAL, HOME_FOCUS, HOME, <HomePage navigator={this.props.navigator} _hideNav={this._hideNav.bind(this)}  _showNav={this._showNav.bind(this)}  hideNav={this.state.hideNav} /> )}
+							{this._renderTabItem(CATEGORY_NORMAL, CATEGORY_FOCUS, CATEGORY, this._createChildView(CATEGORY)  )}
+							{this._renderTabItem(FAXIAN_NORMAL, FAXIAN_FOCUS, FAXIAN, <Shop/>   )}
+							{this._renderTabItem(CART_NORMAL, CART_FOCUS, CART, <Cart navigator={this.props.navigator}  />)}
+							{this._renderTabItem(PERSONAL_NORMAL, PERSONAL_FOCUS, PERSONAL,  <Account navigator={this.props.navigator} />)}
 						</TabNavigator>);
 			
 		

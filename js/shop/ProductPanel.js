@@ -18,7 +18,7 @@ import {
 
 
 
-import Cart from '../cart/index';
+
 
 
 
@@ -188,14 +188,7 @@ export default class ProductPanel extends React.Component {
 		
 
 
-	_goToCartPress(){
-		
-		this.props.navigator.push({
-		  component: Cart,
-			passProps: {products: this.state.data}
-		});
-	}
-	
+
 	
 	
 	
@@ -231,7 +224,7 @@ export default class ProductPanel extends React.Component {
 			</TouchableOpacity>
 			
 			<TouchableOpacity
-				onPress={() =>this._goToCartPress()}
+				onPress={() =>this.props._goToCartPress()}
 				style={styles.cartContainer}>
 				<Image
 						source={require('./images/product/cart.png')}

@@ -13,6 +13,7 @@ import {
 	TouchableOpacity,
 	AsyncStorage,
 	Alert,
+	ListView,
 } from 'react-native';
 
 
@@ -39,8 +40,7 @@ export default class SetAddress extends Component {
 	
 	
 	componentDidMount() {
-	
-		
+		this._loadInit();
 	}
 	
 	
@@ -68,45 +68,10 @@ export default class SetAddress extends Component {
 	
 	_addAddress(){
 	
-		this.props.navigator.push() {
+		this.props.navigator.push({
 			component: AddAddress,
 			title: '新建收获地址',
-		}
-	
-/**
-		http.get(GLOBAL.ALL_ORDER_URL, this.state.headers, function(data){
-			console.log(data);
-			if (data !=null){
-				this.setState({
-					dataSource: this.state.dataSource.cloneWithRows(data),
-				});
-			}
-			
 		});
-**/
-		
-		
-		
-		fetch(GLOBAL.ADD_ADDRESS_URL, {
-			method: 'POST',
-			headers: this.state.headers,
-			body: json.Stringify(body),
-		})
-		.then(response => response.json())
-		.then(
-			(responseData) => {
-				console.log(responseData);
-			}
-		)
-		.catch(error =>
-			this.setState({
-				message: '系统故障，请稍后重试' + error
-		}));
-		
-		
-		
-		
-		
 	
 	}
 

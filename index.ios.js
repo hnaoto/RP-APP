@@ -26,8 +26,21 @@ class rp extends Component {
   render() {
     return (
 
+   
+    <NavigatorIOS
+			style={styles.container}
+			barTintColor='#fff'
+			titleTextColor='#555'
+			tintColor='#555'
+    	initialRoute={{
+				title:'',
+       	component: MainScreen,
+				navigationBarHidden: true,
+				
+			}}/>
 
-		<MainScreen/>
+
+//		<MainScreen/>
 		
 
     );
@@ -38,16 +51,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+
 });
 
 AppRegistry.registerComponent('rp', () => rp);

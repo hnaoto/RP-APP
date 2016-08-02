@@ -25,7 +25,7 @@ import Orders from './orders';
 import ConfigView from './config';
 
 
-export default class Content extends Component {
+export default class Account extends Component {
 
 	constructor(props) {
 		super(props);
