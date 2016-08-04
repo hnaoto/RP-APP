@@ -27,6 +27,7 @@ import * as GLOBAL from '../config/Global';
 
 
 
+
 var map_ql = 'http://restapi.amap.com/v3/place/around?key=3048183b07370de2b2247499d8e2b75d&location=';
 var map_qr = '&keywords=%E4%B8%AD%E7%B2%AE%E5%AE%B6%E4%BD%B3%E5%BA%B7%E8%82%89%E9%A3%9F&radius=13000&extensions=all';
 
@@ -44,6 +45,8 @@ export default class HomePage extends React.Component {
 			rating: '',
 			TOKEN:'',
 			loggedIn: false,
+			headers: {},
+			cusomterDetail: {},
     }
   }
 	
@@ -77,6 +80,8 @@ export default class HomePage extends React.Component {
 	
 //	}
 
+
+
 	async _loadToken(){
 		try{
 			var value = await AsyncStorage.getItem('AUTH_TOKEN');
@@ -85,8 +90,14 @@ export default class HomePage extends React.Component {
 				this.setState({
 					TOKEN: value,
 					loggedIn: true,
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': 'token ' + value,
+					},
+					
 				});
 				window.TOKEN = value;
+				this._loadCustomerDetail();
 			
 			}
 			
@@ -99,7 +110,46 @@ export default class HomePage extends React.Component {
 
 
 
+	_loadCustomerDetail() {
+		fetch(GLOBAL.CUSTOMER_DETAIL_URL, {
+			method: 'GET',
+			headers: this.state.headers,
+		})
+		.then(response => response.json())
+		.then(
+			(responseData) => {
+				this.setState({
+					cusomterDetail: responseData,
+				});
+				
+				this._storeCustomerDetail(responseData);
+				window.customerDetail = responseData;
+				
+				
+				
+			}
+		)
+		.catch(error =>
+			this.setState({
+				message: '系统故障，请稍后重试' + error
+		}));
 	
+	}
+
+	
+	
+	async _storeCustomerDetail(data){
+	
+		try{
+			var value = await AsyncStorage.setItem(GLOBAL.STORE_KEY.CUSTOMER_DETAIL, JSON.stringify(data));
+			
+		} catch(error){
+			console.log(error.message);
+		}
+	
+		
+	
+	}
 	
  	_handleFocus(event) {
 		this.props.navigator.push({

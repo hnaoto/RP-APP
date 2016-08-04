@@ -45,6 +45,7 @@ export default class Cart extends React.Component {
 				'Authorization': 'token ' + window.TOKEN,
 			},
 			address: [],
+			customerDetail: {},
 		}
 		
 	}
@@ -54,6 +55,7 @@ export default class Cart extends React.Component {
 	componentDidMount() {
 		this._loadAddress();
 		this._loadInitialSate().done()
+	
 	}
 	
 
@@ -66,6 +68,24 @@ export default class Cart extends React.Component {
 			var _this = this;
 			var subtotal = 0;
 			try {
+			
+				//get customer detail
+				
+				var detail = await AsyncStorage.getItem(GLOBAL.STORE_KEY.CUSTOMER_DETAIL);
+				
+				if (detail) {
+					this.setState ({
+						customerDetail: detail,
+ 					
+					});
+				
+				}
+				
+				
+				
+				
+				//get products
+			
 				var keys = await AsyncStorage.getAllKeys();
 		
 				if (keys != null) {
@@ -103,6 +123,9 @@ export default class Cart extends React.Component {
 	
 		}
 	
+
+	
+
 	
 	
 	
@@ -118,7 +141,7 @@ export default class Cart extends React.Component {
 			
 		});
 **/
-		console.log(GLOBAL.ALL_ADDRESS_URL);
+
 		fetch(GLOBAL.ALL_ADDRESS_URL, {
 			method: 'GET',
 			headers: this.state.headers,
@@ -212,13 +235,17 @@ export default class Cart extends React.Component {
 	
 	
 	_placeOrder()	{
-		
-		if (this.state.address){
+		if (this.state.address && this.state.customerDetail.default_address){
 	
 			this.props.navigator.push({
 				component: PlaceOrder,
 				title: '填写订单',
-				address: this.state.address,
+				passProps: {
+					address: this.state.address,
+					products: this.state.products,
+					customerDetail: this.state.customerDetail,
+					
+				}
 			})
 		
 		} else{
@@ -226,6 +253,7 @@ export default class Cart extends React.Component {
 			this.props.navigator.push({
 				component: SetAddress,
 				title: '添加地址',
+				customerDetail: this.state.customerDetail,
 		
 			})
 			
@@ -329,11 +357,9 @@ export default class Cart extends React.Component {
 		if(this.state.products.length != 0){
 			productList  = (
 					<ListView
-					dataSource={this.state.dataSource}
-					renderRow={this._renderProduct.bind(this)}
-					style={styles_list.listView}
-       />);
-			
+						dataSource={this.state.dataSource}
+						renderRow={this._renderProduct.bind(this)}
+						style={styles_list.listView}/>);
 			
 			cartPanel = (<CartPanel
 										subtotal={this.state.subtotal}
