@@ -8,6 +8,9 @@ module.exports = {
 	STORE_KEY: {
 		CUSTOMER_DETAIL: 'Customer-Detail',
 	},
+	URL: {
+		ADD_ADDRESS: 'http://rp-backend.herokuapp.com/api/user/address/add/',
+	},
   COLOR: {
     ORANGE: '#C50',
     DARKBLUE: '#0F3274',

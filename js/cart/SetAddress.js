@@ -51,7 +51,7 @@ export default class SetAddress extends Component {
 			 null,
 		  [
 			 {text: '取消', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-			 {text: '添加新地址', onPress: () => console.log('OK Pressed')},
+			 {text: '添加新地址', onPress: () => this._addAddress()},
 			]
 );
 	
