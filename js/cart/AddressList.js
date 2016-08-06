@@ -19,9 +19,9 @@ import {
 
 import * as GLOBAL from '../config/Global';
 import SetDefaultAddress from './SetDefaultAddress';
-import AddressList from './AddressList';
+import AddAddress from './AddAddress';
 
-export default class PlaceOrder extends Component {
+export default class AddressList extends Component {
 
 	constructor(props){
 		super(props);
@@ -31,7 +31,8 @@ export default class PlaceOrder extends Component {
 				'Content-Type': 'application/json',
 				'Authorization': 'token ' + window.TOKEN,
 			},
-      dataSource: ds.cloneWithRows(this.props.products),
+			
+      dataSource: ds.cloneWithRows(this.props.address),
 			customerDetail: {},
 		
 		});
@@ -61,48 +62,22 @@ export default class PlaceOrder extends Component {
 	}
 
 	
-	_placeOrder(){
-	
-/**
-		http.get(GLOBAL.ALL_ORDER_URL, this.state.headers, function(data){
-			console.log(data);
-			if (data !=null){
-				this.setState({
-					dataSource: this.state.dataSource.cloneWithRows(data),
-				});
-			}
-			
+	_addAddressOnPress(){	
+		this.props.navigator.push({
+			component: AddAddress,
+		
 		});
-**/
-		
-		
-		
-		fetch(GLOBAL.PLACE_ORDER_URL, {
-			method: 'POST',
-			headers: this.state.headers,
-			body: json.Stringify(body),
-		})
-		.then(response => response.json())
-		.then(
-			(responseData) => {
-				console.log(responseData);
-			}
-		)
-		.catch(error =>
-			this.setState({
-				message: '系统故障，请稍后重试' + error
-		}));
-	
 	}
 	
 	
 	
 	
-	_renderProduct(product) {
+	
+	_renderAddress(address) {
 	  return (
 		<View style={styles_list.container}>
 			<Text>
-				{product.basic_info.name}
+				{address.shipping_address}
 			</Text>
 		
 		</View>
@@ -120,33 +95,10 @@ export default class PlaceOrder extends Component {
 		});
 	
 	}
-	
-	
-	_addressList(){
-		this.props.navigator.push({
-			component: AddressList,
-			passProps: {
-				address: this.props.address,
-			
-			},
-			title: '收获地址',
-			
-		
-		});
-	
-	}
 
 
 	render(){
-	
-		var customerDetail = this.state.customerDetail;
-		var shippingInfo = null;
-		if (!customerDetail.default_address)	{
-				shippingInfo = '暂无默认地址，点击添加';
-		}else {
-			shippingInfo = customerDetail.default_address.shipping_address;
-		
-		}
+
 	
 		
 	
@@ -154,23 +106,6 @@ export default class PlaceOrder extends Component {
 		
 			<View style={styles.container}>
 				
-				
-				
-				
-				<ScrollView>
-			 
-					<View style={styles.cell}>
-						
-					
-					<TouchableOpacity
-						onPress={()=>this._addressList()}>
-						<Text>
-							{shippingInfo}
-						</Text>
-					
-					</TouchableOpacity>
-					
-					</View>
 
 
 
@@ -179,21 +114,17 @@ export default class PlaceOrder extends Component {
 				
 				 <ListView
 					dataSource={this.state.dataSource}
-					renderRow={(rowData) => this._renderProduct(rowData)} />
+					renderRow={(rowData) => this._renderAddress(rowData)} />
 				
 				</View>
 					
 	
 					
-					
-					
-				</ScrollView>
-					
-				
-				
-				
-				
-				
+				<TouchableOpacity
+					style={styles.button}
+					onPress={() => this._addAddressOnPress() }>
+          <Text style={styles.buttonText}>新建地址</Text>
+				</TouchableOpacity>
 	
 				
 				
@@ -225,7 +156,25 @@ var styles = StyleSheet.create({
 		marginBottom: 20,
 		flexDirection: 'column',
 		padding: 10,
-	}
+	},
+	
+	button: {
+		position: 'absolute',
+		bottom: 25,
+		left: 90,
+		width: 200,
+    height: 36,
+    backgroundColor: '#69A44A',
+    marginBottom: 10,
+    alignSelf: 'center',
+    justifyContent: 'center'
+	},
+	buttonText: {
+    fontSize: 18,
+    color: 'white',
+    alignSelf: 'center'
+		
+  },
 	
 	
 

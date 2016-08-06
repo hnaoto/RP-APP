@@ -235,7 +235,7 @@ export default class Cart extends React.Component {
 	
 	
 	_placeOrder()	{
-		if (this.state.address && this.state.customerDetail.default_address){
+		if (this.state.address){
 	
 			this.props.navigator.push({
 				component: PlaceOrder,
