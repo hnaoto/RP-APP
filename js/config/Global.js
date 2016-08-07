@@ -7,6 +7,7 @@ module.exports = {
 	CUSTOMER_DETAIL_URL: 'http://rp-backend.herokuapp.com/api/bcs/customer/',
 	STORE_KEY: {
 		CUSTOMER_DETAIL: 'Customer-Detail',
+		SELECTED_ADDRESS: 'Selected-Adress',
 	},
 	URL: {
 		ADD_ADDRESS: 'http://rp-backend.herokuapp.com/api/user/address/add/',

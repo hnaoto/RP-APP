@@ -22,6 +22,7 @@ import CartPanel from './CartPanel';
 import SetAddress from './SetAddress';
 import PlaceOrder from './PlaceOrder';
 import * as GLOBAL from '../config/Global';
+import LoginView from '../account/login';
 
 
 
@@ -233,8 +234,18 @@ export default class Cart extends React.Component {
 	}
 	
 	
+
 	
 	_placeOrder()	{
+	
+		if (!window.TOKEN) {
+			this.props.navigator.push({
+				component: LoginView,
+				title: '用户登录/注册',
+			});
+		
+		} else{
+			
 		if (this.state.address){
 	
 			this.props.navigator.push({
@@ -255,10 +266,11 @@ export default class Cart extends React.Component {
 				title: '添加地址',
 				customerDetail: this.state.customerDetail,
 		
-			})
+			});
+			
+			}
 			
 		}
-	
 	
 	
 	}

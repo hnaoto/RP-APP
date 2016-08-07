@@ -10,7 +10,6 @@ import {
   Text,
   View,
   Image,
-  Navigator,
   NavigatorIOS,
   TextInput,
   Platform,
@@ -66,6 +65,7 @@ export default class LoginView extends Component {
 			}else{
 				window.TOKEN = responseData.token;
 			  this._setToken(responseData.token);
+				this.props.navigator.pop();
 			}
 
 		})

@@ -33,6 +33,7 @@ export default class PlaceOrder extends Component {
 			},
       dataSource: ds.cloneWithRows(this.props.products),
 			customerDetail: {},
+			selectedAddress: {},
 		
 		});
 		
@@ -41,6 +42,7 @@ export default class PlaceOrder extends Component {
 
 	componentDidMount() {
 		this._loadCustomerDetail();
+		this._loadSelectedAddress();
 	
 	}
 
@@ -50,9 +52,27 @@ export default class PlaceOrder extends Component {
 			var value = await AsyncStorage.getItem(GLOBAL.STORE_KEY.CUSTOMER_DETAIL);
 			if (value !== null) {
 				this.setState({
-					customerDetail: value,
+					customerDetail: JSON.parse(value),
 				});
+				
 	
+			}
+		}catch (error){
+			console.log(error.message);
+		}
+	
+	}
+
+
+
+	async _loadSelectedAddress(){
+		try{
+			var value = await AsyncStorage.getItem(GLOBAL.STORE_KEY.SELECTED_ADDRESS);
+			if (value !== null) {
+				this.setState({
+					selectedAddress: JSON.parse(value),
+				});
+
 			}
 		}catch (error){
 			console.log(error.message);
@@ -114,7 +134,7 @@ export default class PlaceOrder extends Component {
 	_SetDefaultAddress() {
 		this.props.navigator.push({
 			component: SetDefaultAddress,
-			title: '收获地址',
+			title: '收货地址',
 			
 		
 		});
@@ -127,9 +147,8 @@ export default class PlaceOrder extends Component {
 			component: AddressList,
 			passProps: {
 				address: this.props.address,
-			
 			},
-			title: '收获地址',
+			title: '收货地址',
 			
 		
 		});
@@ -140,11 +159,14 @@ export default class PlaceOrder extends Component {
 	render(){
 	
 		var customerDetail = this.state.customerDetail;
+		var selectedAddress = this.state.selectedAddress;
 		var shippingInfo = null;
-		if (!customerDetail.default_address)	{
+		if (!customerDetail.default_address && !selectedAddress)	{
 				shippingInfo = '暂无默认地址，点击添加';
 		}else {
-			shippingInfo = customerDetail.default_address.shipping_address;
+			shippingInfo = customerDetail.default_address ?
+											(customerDetail.default_address.receiver +  ' ' + customerDetail.default_address.shipping_address)  :
+											(selectedAddress.receiver + ' ' + selectedAddress.shipping_address);
 		
 		}
 	

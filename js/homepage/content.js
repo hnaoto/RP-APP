@@ -55,9 +55,9 @@ export default class HomePage extends React.Component {
   componentDidMount() {
     this.setState({
       items: [
-        { title: 'Hello Swiper', css: styles.slide1, image:require('./images/banner/1.jpg') },
-        { title: 'Beautiful', css: styles.slide2, image:require('./images/banner/2.jpg') },
-        { title: 'And simple', css: styles.slide3,  image:require('./images/banner/3.jpg')  }
+        { title: '图片加载中', css: styles.slide1, image:require('./images/banner/1.jpg') },
+        { title: '图片加载中', css: styles.slide2, image:require('./images/banner/2.jpg') },
+        { title: '图片加载中', css: styles.slide3,  image:require('./images/banner/3.jpg')  }
       ]
     })
 		

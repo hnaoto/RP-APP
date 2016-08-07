@@ -61,8 +61,10 @@ export default class AddressList extends Component {
 	
 	}
 
+
+
 	
-	_addAddressOnPress(){	
+	_addAddressOnPress() {
 		this.props.navigator.push({
 			component: AddAddress,
 		
@@ -73,27 +75,69 @@ export default class AddressList extends Component {
 	
 	
 	
+	async _saveSelectedAddress(address){
+	
+		try{
+			var value = await AsyncStorage.setItem(GLOBAL.STORE_KEY.SELECTED_ADDRESS,JSON.stringify(address));
+			
+			
+		}catch (error){
+			console.log(error.message);
+		}
+
+	}
+	
+	
+	
+	_rowPress(address) {
+		
+		this._saveSelectedAddress(address);
+		this.props.navigator.pop();
+	
+	}
+	
+	
+	
+
+
+
+	
+	
+	
 	_renderAddress(address) {
 	  return (
+		
+		
+				
+		<TouchableOpacity
+			onPress={() => this._rowPress(address)}>
+				
+				
 		<View style={styles_list.container}>
+		
+		
+		
 			<Text>
 				{address.shipping_address}
 			</Text>
 		
 		</View>
+		
+		</TouchableOpacity>
 		);
 	
 	}
 
+
+
+
+	
 	
 	_SetDefaultAddress() {
 		this.props.navigator.push({
 			component: SetDefaultAddress,
 			title: '收获地址',
-			
-		
 		});
-	
 	}
 
 
@@ -104,17 +148,16 @@ export default class AddressList extends Component {
 	
 		return (
 		
+		
+
 			<View style={styles.container}>
-				
-
-
-
-
+			
 				<View style={styles.cell}>
 				
 				 <ListView
 					dataSource={this.state.dataSource}
-					renderRow={(rowData) => this._renderAddress(rowData)} />
+					renderRow={(rowData) => this._renderAddress(rowData)}
+					/>
 				
 				</View>
 					
@@ -126,7 +169,6 @@ export default class AddressList extends Component {
           <Text style={styles.buttonText}>新建地址</Text>
 				</TouchableOpacity>
 	
-				
 				
 			</View>
 		
