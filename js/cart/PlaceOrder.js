@@ -20,6 +20,7 @@ import {
 import * as GLOBAL from '../config/Global';
 import SetDefaultAddress from './SetDefaultAddress';
 import AddressList from './AddressList';
+import OrderPanel from './OrderPanel';
 
 export default class PlaceOrder extends Component {
 
@@ -32,28 +33,44 @@ export default class PlaceOrder extends Component {
 				'Authorization': 'token ' + window.TOKEN,
 			},
       dataSource: ds.cloneWithRows(this.props.products),
+			products: this.props.products,
 			customerDetail: {},
 			selectedAddress: {},
-		
+			shippingInfo: '',
+			count: 0,
 		});
 		
 
 	}
 
 	componentDidMount() {
-		this._loadCustomerDetail();
-		this._loadSelectedAddress();
+		this._initLoad();
+
 	
 	}
 
 
-	async _loadCustomerDetail(){
+
+
+	
+	
+
+
+	async _initLoad(){
 		try{
-			var value = await AsyncStorage.getItem(GLOBAL.STORE_KEY.CUSTOMER_DETAIL);
-			if (value !== null) {
+			var customerDetail = await AsyncStorage.getItem(GLOBAL.STORE_KEY.CUSTOMER_DETAIL);
+			var selectedAddress = await AsyncStorage.getItem(GLOBAL.STORE_KEY.SELECTED_ADDRESS);
+			
+			
+			if (customerDetail &&  selectedAddress ) {
 				this.setState({
-					customerDetail: JSON.parse(value),
+					customerDetail: JSON.parse(customerDetail),
+					selectedAddress: JSON.parse(selectedAddress),
 				});
+				
+				this._initShippingInfo();
+				
+				
 				
 	
 			}
@@ -64,21 +81,32 @@ export default class PlaceOrder extends Component {
 	}
 
 
-
-	async _loadSelectedAddress(){
-		try{
-			var value = await AsyncStorage.getItem(GLOBAL.STORE_KEY.SELECTED_ADDRESS);
-			if (value !== null) {
-				this.setState({
-					selectedAddress: JSON.parse(value),
-				});
-
-			}
-		}catch (error){
-			console.log(error.message);
+	_initShippingInfo(){
+		var customerDetail = this.state.customerDetail;
+		var selectedAddress = this.state.selectedAddress;
+		var shippingInfo = null;
+		
+		
+		
+		
+		if (!customerDetail.default_address && !selectedAddress)	{
+				shippingInfo = '暂无默认地址，点击添加';
+		}else {
+			shippingInfo = customerDetail.default_address ?
+											(customerDetail.default_address.receiver +  ' ' + customerDetail.default_address.shipping_address)  :
+											(selectedAddress.receiver + ' ' + selectedAddress.shipping_address);
+		
 		}
-	
+		
+		
+		this.setState({
+			shippingInfo: shippingInfo,
+		
+		});
+		
 	}
+
+
 
 	
 	_placeOrder(){
@@ -118,16 +146,34 @@ export default class PlaceOrder extends Component {
 	
 	
 	
-	_renderProduct(product) {
-	  return (
-		<View style={styles_list.container}>
-			<Text>
-				{product.basic_info.name}
-			</Text>
-		
-		</View>
-		);
 	
+	_renderProducts(){
+			var list = [];
+		
+			var products = this.state.products;
+			products.map(function(pt, key){
+				if (key <= 2) {
+					list.push(
+						(<View
+							key={key}
+							style={styles_list.container}>
+							<Image
+							source={{uri: pt.basic_info.picture_backup}}
+							style={styles_list.thumbnail}/>
+						</View>)
+					 );
+				}
+		
+			});
+		
+		
+		
+		
+		
+		
+		
+			return list;
+		
 	}
 
 	
@@ -156,19 +202,13 @@ export default class PlaceOrder extends Component {
 	}
 
 
+	_productsOnPress(){
+	
+	}
+
 	render(){
 	
-		var customerDetail = this.state.customerDetail;
-		var selectedAddress = this.state.selectedAddress;
-		var shippingInfo = null;
-		if (!customerDetail.default_address && !selectedAddress)	{
-				shippingInfo = '暂无默认地址，点击添加';
-		}else {
-			shippingInfo = customerDetail.default_address ?
-											(customerDetail.default_address.receiver +  ' ' + customerDetail.default_address.shipping_address)  :
-											(selectedAddress.receiver + ' ' + selectedAddress.shipping_address);
-		
-		}
+
 	
 		
 	
@@ -182,38 +222,47 @@ export default class PlaceOrder extends Component {
 				<ScrollView>
 			 
 					<View style={styles.cell}>
-						
-					
-					<TouchableOpacity
-						onPress={()=>this._addressList()}>
-						<Text>
-							{shippingInfo}
-						</Text>
-					
-					</TouchableOpacity>
-					
+						<TouchableOpacity
+							onPress={()=>this._addressList()}>
+							<Text style={styles.orderText}>
+								{this.state.shippingInfo}
+							</Text>
+						</TouchableOpacity>
 					</View>
 
 
+			<TouchableOpacity onPress={() =>  this._productsOnPress()}>
 
-
-				<View style={styles.cell}>
-				
-				 <ListView
-					dataSource={this.state.dataSource}
-					renderRow={(rowData) => this._renderProduct(rowData)} />
-				
-				</View>
+					<View style={styles.listView}>
+						{this._renderProducts()}
+						
+						
+					  <View style={styles.countContainer}>
+							<Text style={styles.orderText}> 共{this.state.count}件</Text>
+							<Text style={styles.orderText}>  >   </Text>
+						</View>
+					
+						
+					</View>
+		</TouchableOpacity>
 					
 	
 					
 					
 					
+				
+				<View style={styles.cell}>
+					<Text style={styles.orderText}>商品总价 </Text>
+					<Text style={styles.orderText}>运费  </Text>
+				</View>
+						
+						
+					
 				</ScrollView>
 					
 				
 				
-				
+				<OrderPanel/>
 				
 				
 	
@@ -246,8 +295,36 @@ var styles = StyleSheet.create({
 		flex: 1,
 		marginBottom: 20,
 		flexDirection: 'column',
-		padding: 10,
-	}
+		paddingLeft: 15,
+	},
+	
+	
+	listView: {
+		flexDirection: 'row',
+		backgroundColor:'#FFF',
+		marginBottom: 20,
+
+	},
+	
+	countContainer:{
+		alignItems: 'center',
+		flexDirection: 'row',
+		
+	},
+	
+	orderText: {
+		color: '#555',
+		fontSize: 15,
+	
+	},
+	shippingInfoText: {
+		color: '#000',
+		fontSize: 13,
+		fontWeight: 400,
+	
+	},
+	
+
 	
 	
 
@@ -258,104 +335,14 @@ var styles = StyleSheet.create({
 
 var styles_list = StyleSheet.create({
 	container: {
-		flex:1,
-		backgroundColor:'#FFF',
-		borderColor: '#F8F8F8',
-		borderWidth: 1,
-		flexDirection: 'column',
-		
+
+		alignSelf: 'flex-start',
 	
-	},
-  mainContainer: {
-    flexDirection: 'row',
-		paddingLeft: 2,
-		paddingTop: 5,
-		paddingBottom: 5,
-		height: 120,
-  },
-  rightContainer: {
-    flex: 1,
-		marginLeft: 5,
-	
-  },
-  name: {
-    fontSize: 16,
-		paddingTop: 1,
-		paddingRight: 3,
-		fontWeight: '500',
-		color:'#666'
-    
-  },
-  year: {
-    textAlign: 'center',
-  },
-	price: {
-    fontSize: 16,
-		fontWeight: '600',
-		color: '#B23009',
-		textAlign: 'right',
 	},
   thumbnail: {
-    width: 127,
-    height: 90,
+    width: 100,
+    height: 75,
 		
   },
 
-	titleContainer: {
-		flexDirection: 'row',
-		flex: 1,
-	},
-	rating: {
-		color: '#EA8530',
-		fontSize: 12,
-	},
-	verticalContainer: {
-	  marginTop: 15,
-		padding: 4,
-		flexDirection: 'column',
-	},
-	statusText: {
-		color: '#FFF',
-		fontSize: 12,
-		fontWeight: '900',
-	},
-	shopContainer: {
-		paddingLeft: 2,
-		paddingTop: 5,
-		paddingBottom: 5,
-		backgroundColor: '#FEFEFE',
-		height: 20,
-	},
-	shopText: {
-		fontSize: 16,
-		fontWeight: '500',
-		marginLeft: 10,
-		color: '#777777',
-	},
-	buttonContainer: {
-		flexDirection:'row',
-		backgroundColor: '#FFFFFF',
-		borderColor: '#A34021',
-		borderWidth: 1,
-		height: 25,
-		borderRadius: 5,
-		width: 83,
-
-	},
-	countContainer:{
-		borderLeftColor: '#A34021',
-		borderRightColor: '#A34021',
-		borderLeftWidth: 1,
-		borderRightWidth: 1,
-	},
-	countText: {
-		color: '#A34021',
-		fontSize: 16,
-		paddingLeft: 5,
-		paddingRight: 5,
-	},
-	symbolText: {
-		color: '#A34021',
-		fontSize: 16,
-	}
 });

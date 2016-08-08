@@ -55,7 +55,7 @@ export default class ProductView extends React.Component {
 			<ScrollView>
 				<Text style={styles.title}>{product.basic_info.name}</Text>
         <Image style={styles.image}
-            source={{uri: product.basic_info.picture}} />
+            source={{uri: product.basic_info.picture_backup}} />
         <View style={styles.heading}>
 					<View style={styles.first_line}>
 							<Text style={styles.size}>{product.basic_info.size}</Text>

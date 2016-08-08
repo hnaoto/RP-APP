@@ -88,6 +88,8 @@ export default class ProductPage extends Component {
 	
 	
 	_renderProduct(product) {
+		
+		
 	
 	 return(
 		 
@@ -97,7 +99,7 @@ export default class ProductPage extends Component {
 		
       <View style={styles_list.container}>
         <Image
-          source={ require('./images/product/none.jpg')}
+          source={{uri: product.basic_info.picture_backup}}
           style={styles_list.thumbnail}
         />
 					<View style={styles_list.rightContainer}>
