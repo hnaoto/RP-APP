@@ -21,23 +21,26 @@ import * as GLOBAL from '../config/Global';
 import SetDefaultAddress from './SetDefaultAddress';
 import AddressList from './AddressList';
 import OrderPanel from './OrderPanel';
+import PayOrder from '../order/payOrder';
 
 export default class PlaceOrder extends Component {
 
 	constructor(props){
 		super(props);
-		const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+		
+		
 		this.state = ({
 			headers : {
 				'Content-Type': 'application/json',
 				'Authorization': 'token ' + window.TOKEN,
 			},
-      dataSource: ds.cloneWithRows(this.props.products),
-			products: this.props.products,
+			products: [],
 			customerDetail: {},
 			selectedAddress: {},
 			shippingInfo: '',
+			receiverInfo: '',
 			count: 0,
+			subtotal: 0,
 		});
 		
 
@@ -45,16 +48,45 @@ export default class PlaceOrder extends Component {
 
 	componentDidMount() {
 		this._initLoad();
+		this.setState({
+			products:this.props.products,
+			subtotal: this.props.subtotal,
+		
+		
+		});
 
 	
 	}
 
 
+	componentWillReceiveProps() {
+		this._loadSelectedAddress();
+	}
 
 
+
+
+	async _loadSelectedAddress() {
+		try{
+			var selectedAddress = await AsyncStorage.getItem(GLOBAL.STORE_KEY.SELECTED_ADDRESS);
+		
+			if (selectedAddress) {
+			
+				var value = JSON.parse(selectedAddress);
+	
+				this.setState({
+					receiverInfo: (value.receiver + ' ' + value.cellphone_number),
+					shippingInfo: value.shipping_address,
+					selectedAddress: JSON.parse(selectedAddress),
+				});
+				
+			}
+		}catch (error){
+			console.log(error.message);
+		}
+	}
 	
 	
-
 
 	async _initLoad(){
 		try{
@@ -84,7 +116,8 @@ export default class PlaceOrder extends Component {
 	_initShippingInfo(){
 		var customerDetail = this.state.customerDetail;
 		var selectedAddress = this.state.selectedAddress;
-		var shippingInfo = null;
+		var shippingInfo = '';
+		var receiverInfo = '';
 		
 		
 		
@@ -92,14 +125,18 @@ export default class PlaceOrder extends Component {
 		if (!customerDetail.default_address && !selectedAddress)	{
 				shippingInfo = '暂无默认地址，点击添加';
 		}else {
+			receiverInfo = customerDetail.default_address ?
+											(customerDetail.default_address.receiver +  ' ' + customerDetail.default_address.cellphone_number)  :
+											(selectedAddress.receiver + ' ' + selectedAddress.cellphone_number);
 			shippingInfo = customerDetail.default_address ?
 											(customerDetail.default_address.receiver +  ' ' + customerDetail.default_address.shipping_address)  :
-											(selectedAddress.receiver + ' ' + selectedAddress.shipping_address);
+											(selectedAddress.shipping_address);
 		
 		}
 		
 		
 		this.setState({
+			receiverInfo: receiverInfo,
 			shippingInfo: shippingInfo,
 		
 		});
@@ -109,7 +146,7 @@ export default class PlaceOrder extends Component {
 
 
 	
-	_placeOrder(){
+	_createOrder(){
 	
 /**
 		http.get(GLOBAL.ALL_ORDER_URL, this.state.headers, function(data){
@@ -122,28 +159,69 @@ export default class PlaceOrder extends Component {
 			
 		});
 **/
+
+		var plist = [];
+		var products = this.state.products;
+		for (var i = 0; i < products.length; i++) {
+			plist.push ({
+				product: products[i].id,
+				number: products[i].cart_count,
+			
+			});
+		
+		}
 		
 		
+		var body = {
+			order : {
+				address: this.state.selectedAddress.id,
+			},
+			products: plist
+			
+		};
 		
-		fetch(GLOBAL.PLACE_ORDER_URL, {
+
+		
+		
+		fetch(GLOBAL.URL.PLACE_ORDER, {
 			method: 'POST',
 			headers: this.state.headers,
-			body: json.Stringify(body),
+			body: JSON.stringify(body),
 		})
-		.then(response => response.json())
-		.then(
-			(responseData) => {
-				console.log(responseData);
+		.then(response =>
+			{
+				response.json()
+				if (response.status == 201) {
+					console.log('ok');
+				}
 			}
+		
 		)
 		.catch(error =>
 			this.setState({
 				message: '系统故障，请稍后重试' + error
 		}));
+		
+		
 	
 	}
 	
 	
+	
+	_orderCreated(){
+		//clear cart
+		
+		
+		//
+		this.props.navigator.push({
+			component: payOrder,
+			title: '支付订单',
+			
+			
+		
+		});
+	
+	}
 	
 	
 	
@@ -224,7 +302,10 @@ export default class PlaceOrder extends Component {
 					<View style={styles.cell}>
 						<TouchableOpacity
 							onPress={()=>this._addressList()}>
-							<Text style={styles.orderText}>
+							<Text style={styles.receiverInfoText}>
+								{this.state.receiverInfo}
+							</Text>
+							<Text style={styles.shippingInfoText}>
 								{this.state.shippingInfo}
 							</Text>
 						</TouchableOpacity>
@@ -252,8 +333,8 @@ export default class PlaceOrder extends Component {
 					
 				
 				<View style={styles.cell}>
-					<Text style={styles.orderText}>商品总价 </Text>
-					<Text style={styles.orderText}>运费  </Text>
+					<Text style={styles.orderText}>商品总价  ¥ {this.state.subtotal} </Text>
+					<Text style={styles.orderText}>运费  ¥ </Text>
 				</View>
 						
 						
@@ -262,7 +343,8 @@ export default class PlaceOrder extends Component {
 					
 				
 				
-				<OrderPanel/>
+				<OrderPanel
+					_createOrder={this._createOrder.bind(this)}/>
 				
 				
 	
@@ -295,7 +377,7 @@ var styles = StyleSheet.create({
 		flex: 1,
 		marginBottom: 20,
 		flexDirection: 'column',
-		paddingLeft: 15,
+		padding: 10,
 	},
 	
 	
@@ -315,13 +397,15 @@ var styles = StyleSheet.create({
 	orderText: {
 		color: '#555',
 		fontSize: 15,
+		fontWeight: '600',
 	
 	},
-	shippingInfoText: {
-		color: '#000',
-		fontSize: 13,
-		fontWeight: 400,
 	
+	receiverInfoText: {
+		color: '#222',
+		fontSize: 15,
+		fontWeight: '700',
+		marginBottom: 10,
 	},
 	
 

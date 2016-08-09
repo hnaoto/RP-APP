@@ -51,20 +51,12 @@ export default class OrderPanel extends Component {
 					</Text>
 					
 
-				
-				
-					<TouchableOpacity
-						onPress = {() =>this.props._clearCart()}>
-					<Text style={styles.payText}>
-						清空购物车
-					</Text>
-				  </TouchableOpacity>
-				
+		
 				
 				
 				
 					<TouchableOpacity
-						onPress = {() =>this.props._placeOrder()}>
+						onPress = {() =>this.props._createOrder()}>
 						<View style={styles.payContainer}>
 							<Text style={styles.payText}>
 								提交订单

@@ -255,6 +255,7 @@ export default class Cart extends React.Component {
 					address: this.state.address,
 					products: this.state.products,
 					customerDetail: this.state.customerDetail,
+					subtotal: this.state.subtotal,
 					
 				}
 			})

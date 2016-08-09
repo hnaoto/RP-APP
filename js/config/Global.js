@@ -11,6 +11,7 @@ module.exports = {
 	},
 	URL: {
 		ADD_ADDRESS: 'http://rp-backend.herokuapp.com/api/user/address/add/',
+		PLACE_ORDER: 'http://rp-backend.herokuapp.com/api/bcs/order/add/',
 	},
   COLOR: {
     ORANGE: '#C50',
