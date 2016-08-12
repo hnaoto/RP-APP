@@ -1,7 +1,7 @@
 'use strict';
 
 var AutoComplete = require('react-native-autocomplete');
-var Countries = require('./countries.json');
+var Products = require('./products.json');
 
 import React, { Component } from 'react';
 import {
@@ -23,21 +23,31 @@ export default class SearchBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        data: Countries
+        data: Products
     };
   }
 	
 	
+	componentDidMount() {
+	
+		
+	}
+	
+	
+
+
 	
 
    onTyping(text){
-		var countries = Countries.filter(function (country) {
-			return (country.name).indexOf(text) > -1 ?  true : false;
-		}).map(function (country) {
-			return country.name;
+		var products = Products.filter(function (product) {
+			return (product.kw).indexOf(text) > -1 ?  true : false;
+		}).map(function (product) {
+			return product.name;
 		});
-			this.setState({data: countries});
-    }
+		
+		
+		this.setState({data: products});
+	}
 
 
 	_onPressButton(event) {
@@ -71,7 +81,7 @@ export default class SearchBar extends React.Component {
 
                     suggestions={this.state.data}
 
-                    placeholder='This is a great placeholder'
+                    placeholder='请输入搜索产品名称'
                     style={styles_header.inputText}
                     clearButtonMode='always'
                     returnKeyType='go'

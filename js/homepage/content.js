@@ -328,8 +328,10 @@ export default class HomePage extends React.Component {
 var styles = StyleSheet.create({
   container:{
    flex:1,
+
   },
   wrapper: {
+	
 
   },
   nav: {
@@ -414,7 +416,8 @@ var styles = StyleSheet.create({
 
 
 const styles_header = StyleSheet.create({
-    container: {  
+    container: {
+			
         flexDirection: 'row',   // 水平排布  
         paddingLeft: 10,  
         paddingRight: 10,  
@@ -526,7 +529,10 @@ var styles_list = StyleSheet.create({
 		color: '#FFF',
 		fontSize: 12,
 		fontWeight: '900',
-	}
+	},
+	listView: {
+		flex: 1,
+	},
 });
 
 

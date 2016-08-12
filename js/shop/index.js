@@ -27,21 +27,70 @@ import SearchBar from './SearchBar';
 import ProductPage from './Products';
 import ReviewPage from './Reviews';
 import ShopDetailPage from './ShopDetail';
+import SearchResults from './SearchResults';
 import ScrollableTabView, { DefaultTabBar, ScrollableTabBar } from 'react-native-scrollable-tab-view';
 
 
 export default class ShopView extends Component {
 
+	constructor(props){
+		super(props);
+		this.state = ({
+			kw: '',
+			products: {},
+		});
 	
+	}
 
+
+
+	
+	
+	
+	
+	
+	_setProducts(data){
+		this.setState({
+			products: data,
+		})
+	
+	}
+	
+	_search(text){
+		this.setState({
+			kw: text,
+		});
+		
+		
+		this.props.navigator.push({
+			component: SearchResults,
+			passProps: {
+				products: this.state.products,
+				kw: text,
+				_showNav: this.props._showNav.bind(this),
+			},
+			title: '搜索结果',
+			navigationBarHidden: true,
+		
+		});
+	
+		
+		
+		
+		
+	}
+	
+	
+	
 
   render() {
 	
 	
     return (
 		
-		<View>
+		<View style={styles.container}>
 			<SearchBar navigator={this.props.navigator}
+								 _search= {this._search.bind(this)}
 								 _showNav={this.props._showNav.bind(this)}
 								 hideNav={this.props.hideNav}/>
 
@@ -53,7 +102,9 @@ export default class ShopView extends Component {
 						gpsID={this.props.gpsID}
 						navigator={this.props.navigator}
 						_showNav={this.props._showNav.bind(this)}
-						_hideNav={this.props._hideNav.bind(this)}/>
+						_hideNav={this.props._hideNav.bind(this)}
+					  kw={this.state.kw}
+						_setProducts={this._setProducts.bind(this)}/>
 					<ReviewPage tabLabel='用户评价' />
 					<ShopDetailPage tabLabel='店铺详情' />
 			</ScrollableTabView>
@@ -68,7 +119,6 @@ export default class ShopView extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 30,
   },
   tabView: {
     flex: 1,

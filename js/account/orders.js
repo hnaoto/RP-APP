@@ -112,6 +112,7 @@ export default class Orders extends Component {
 		
 		
 		products.map(function(pt, key){
+		
 		  
 			var product = pt.product;
 
@@ -119,13 +120,14 @@ export default class Orders extends Component {
 
 			p.push(
 			
+					
 			<View
 				key={key}
 				style={styles_list.infoContainer}>
 				
 				
 					<Image
-						source={require('../shop/images/product/none.jpg')}
+						source={{uri: product.basic_info.picture_backup}}
 						style={styles_list.thumbnail}/>
 		
 						 
@@ -141,9 +143,10 @@ export default class Orders extends Component {
 						</Text>
 						
 						
-						<Text style={styles_list.price}>¥{product.price}</Text>
-						
-					
+						<View style={styles_list.priceContainer}>
+							<Text style={styles_list.price}>¥{product.price}</Text>
+							<Text style={styles_list.number}>x{pt.number}</Text>
+						</View>
 						
 					</View>
 					
@@ -180,7 +183,7 @@ export default class Orders extends Component {
 		
 		return (
 		
-		
+				
 		
 			<TouchableOpacity
 				onPress={() => this._orderRowPressed(order)}>
@@ -314,7 +317,7 @@ var styles_list = StyleSheet.create({
 	},
 	statusText:{
 		color: '#DF434D',
-		fontSize: 20,
+		fontSize: 18,
 		fontWeight: '500',
 		padding: 10,
 		flex: 1,
@@ -335,7 +338,7 @@ var styles_list = StyleSheet.create({
 	
   },
   name: {
-    fontSize: 20,
+    fontSize: 18,
 		paddingTop: 1,
 		paddingRight: 3,
 		color:'#666',
@@ -344,12 +347,7 @@ var styles_list = StyleSheet.create({
   year: {
     textAlign: 'center',
   },
-	price: {
-    fontSize: 16,
-		fontWeight: '600',
-		color: '#B23009',
-		textAlign:'left',
-	},
+
   thumbnail: {
     width: 127,
     height: 90,
@@ -388,10 +386,25 @@ var styles_list = StyleSheet.create({
 	},
 	subText:{
 		color: '#666',
-		fontSize: 20,
+		fontSize: 18,
 	 
 	 
 	
+	},
+	
+	priceContainer: {
+		flexDirection: 'row',
+	
+	},
+	price: {
+    fontSize: 16,
+		fontWeight: '600',
+		color: '#B23009',
+		textAlign:'left',
+	},
+	number: {
+		color: '#666',
+		fontSize: 15,
 	},
 
 });

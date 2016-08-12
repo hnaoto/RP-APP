@@ -31,8 +31,16 @@ export default class ControlPanel extends Component {
 
   render() {
     return (
+		
+		<View style={styles.container}>
+		
+		
+			<ProductPage />
+			
+			
+			
 			<ScrollableTabView
-				style={{marginTop: 20, }}
+				style={{marginTop: 20, flex: 1}}
 				renderTabBar={() => <DefaultTabBar />}>
 					<ProductPage 
 						tabLabel='店内产品' 
@@ -43,6 +51,8 @@ export default class ControlPanel extends Component {
 					<ReviewPage tabLabel='用户评价' />
 					<ShopDetailPage tabLabel='店铺详情' />
 			</ScrollableTabView>
+			
+			</View>
     )
   }
 }

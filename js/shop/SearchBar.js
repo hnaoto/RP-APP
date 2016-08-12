@@ -23,7 +23,7 @@ export default class SearchBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        data: Countries
+			data: Countries
     };
   }
 	
@@ -59,7 +59,7 @@ export default class SearchBar extends React.Component {
 							navigator={this.props.navigator}
 							_showNav={this.props._showNav}>
 							<Image
-								source={require('./images/product/back.png')}
+								source={require('./images/product/back_gray.png')}
 								style={styles_header.backButton}
 							/>
 						</TouchableOpacity>
@@ -73,9 +73,10 @@ export default class SearchBar extends React.Component {
 							
 		
 							<TextInput
-							keyboardType='web-search'
-							placeholder='搜索店内商品'
-						  style={styles_header.inputText}/>
+								onSubmitEditing={(event) => this.props._search(event.nativeEvent.text)}
+								keyboardType='web-search'
+								placeholder='搜索店内商品'
+								style={styles_header.inputText}/>
 						</View>
 						
 						<Image
@@ -105,8 +106,11 @@ const styles_header = StyleSheet.create({
         paddingRight: 10,  
         paddingTop: Platform.OS === 'ios' ? 20 : 0,
         height: Platform.OS === 'ios' ? 68 : 48,
-        backgroundColor: '#999',
+        backgroundColor: '#fff',
         alignItems: 'center'  ,
+				borderBottomWidth: 1,
+				borderBottomColor: '#DDD',
+				
     },  
     logo: {  
         height: 24,  
@@ -121,7 +125,8 @@ const styles_header = StyleSheet.create({
         backgroundColor: 'white',  
         alignItems: 'center',  
         marginLeft: 8,  
-        marginRight: 12  
+        marginRight: 12,
+				backgroundColor: '#f8f8f8',
     },  
     backButton: {
         height: 26.7,  
