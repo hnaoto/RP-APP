@@ -25,7 +25,7 @@ export default class SearchResults extends Component {
 		
 	constructor(props){
 		super(props);
-
+	
 		this.state = ({
 			products: this.props.products,
 			kw: this.props.kw,
@@ -38,9 +38,16 @@ export default class SearchResults extends Component {
 		}
 	
 	componentDidMount(){
+	
+		console.log(this.props.kw);
+		console.log(this.state.kw);
 		this._search();
 		
 	}
+	
+	
+	
+	
 	
 	
 	
@@ -56,7 +63,7 @@ export default class SearchResults extends Component {
 				kw: text,
 			});
 		}
-
+		
 		
 	
 		var products = this.state.products;
@@ -153,8 +160,10 @@ export default class SearchResults extends Component {
 			
 			
 			<SearchBar navigator={this.props.navigator}
+									kw= {this.state.kw}
 								 _search= {this._search.bind(this)}
-								 _showNav={this.props._showNav.bind(this)}/>
+								 _showNav={this.props._showNav.bind(this)}
+								 _hideText={this.props._hideText.bind(this)}/>
 					 
 					 
 					 
@@ -196,7 +205,7 @@ var styles_list = StyleSheet.create({
 		paddingLeft: 2,
 		paddingTop: 5,
 		paddingBottom: 5,
-		height: 90
+		height: 100,
   },
   rightContainer: {
     flex: 1,

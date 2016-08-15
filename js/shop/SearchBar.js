@@ -17,17 +17,21 @@ import {
 		NavigatorIOS,
 } from 'react-native';
 
+import Category from './Category';
+
 
 export default class SearchBar extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-			data: Countries
+			data: Countries,
+			kw: this.props.kw,
     };
   }
 	
 	
+
 	
 
    onTyping(text){
@@ -41,13 +45,25 @@ export default class SearchBar extends React.Component {
 
 
 	_onPressButton(event) {
+	
+		
 		this.navigator.pop();
+		this._hideText();
 		this._showNav();
 		
+		
 	}
+	
+	
+		
+	
+	
+	
+
 
 
   render() {
+	
         return (
 	      <View>
 					<View style={styles_header.container}>
@@ -57,7 +73,8 @@ export default class SearchBar extends React.Component {
 						<TouchableOpacity
 							onPress={this._onPressButton}
 							navigator={this.props.navigator}
-							_showNav={this.props._showNav}>
+							_showNav={this.props._showNav}
+							_hideText={this.props._hideText}>
 							<Image
 								source={require('./images/product/back_gray.png')}
 								style={styles_header.backButton}
@@ -73,16 +90,24 @@ export default class SearchBar extends React.Component {
 							
 		
 							<TextInput
+								onChangeText={(text) => this.setState({kw: text})}
+								value={this.state.kw}
 								onSubmitEditing={(event) => this.props._search(event.nativeEvent.text)}
 								keyboardType='web-search'
 								placeholder='搜索店内商品'
 								style={styles_header.inputText}/>
 						</View>
 						
+						
+						
+						
+						<TouchableOpacity
+							onPress={this.props._categoryOnPress}
+							navigator={this.props.navigator}>
 						<Image
 							source={require('./images/product/category.png')}
 							style={styles_header.categoryButton}/>
-						
+						</TouchableOpacity>
 						
 
 					

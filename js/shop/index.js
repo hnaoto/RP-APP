@@ -20,7 +20,7 @@ import {
 
 
 import Drawer from 'react-native-drawer'
-import Main from './Main.ScrollableTabView'
+//import Main from './Main.ScrollableTabView'
 import SearchBar from './SearchBar';
 
 
@@ -28,6 +28,9 @@ import ProductPage from './Products';
 import ReviewPage from './Reviews';
 import ShopDetailPage from './ShopDetail';
 import SearchResults from './SearchResults';
+import Category from './Category';
+
+
 import ScrollableTabView, { DefaultTabBar, ScrollableTabBar } from 'react-native-scrollable-tab-view';
 
 
@@ -45,8 +48,7 @@ export default class ShopView extends Component {
 
 
 	
-	
-	
+
 	
 	
 	_setProducts(data){
@@ -56,10 +58,27 @@ export default class ShopView extends Component {
 	
 	}
 	
-	_search(text){
+	
+		
+	_hideText(){
+		console.log('hide');
+	
 		this.setState({
-			kw: text,
+			kw: '',
 		});
+	
+	}
+	
+	
+	
+	_search(text){
+	
+	
+		this.setState({
+			kw: '',
+		});
+		
+		console.log(this.state.kw);
 		
 		
 		this.props.navigator.push({
@@ -68,6 +87,7 @@ export default class ShopView extends Component {
 				products: this.state.products,
 				kw: text,
 				_showNav: this.props._showNav.bind(this),
+				_hideText: this._hideText.bind(this),
 			},
 			title: '搜索结果',
 			navigationBarHidden: true,
@@ -82,17 +102,36 @@ export default class ShopView extends Component {
 	
 	
 	
+	
+	_categoryOnPress(){
+		this.props.navigator.push({
+			component: Category,
+			title: '商品分类',
+			passProps: {
+				products: this.state.products,
+			
+			}
+			//navigationBarHidden: true,
+		
+		});
+	
+	}
+	
+	
+	
 
   render() {
-	
 	
     return (
 		
 		<View style={styles.container}>
 			<SearchBar navigator={this.props.navigator}
+								_categoryOnPress={this._categoryOnPress.bind(this)}
+								 _hideText={this._hideText.bind(this)}
 								 _search= {this._search.bind(this)}
 								 _showNav={this.props._showNav.bind(this)}
-								 hideNav={this.props.hideNav}/>
+								 hideNav={this.props.hideNav}
+								 kw={this.state.kw}/>
 
 			<ScrollableTabView
 				style={{marginTop: 20, flex:1,}}

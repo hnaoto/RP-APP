@@ -1,111 +1,78 @@
-'use strict'
+'use strict';
 
-import React, { Component,  PropTypes } from 'react';
+import React, { Component } from 'react';
 import {
-    AppRegistry,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
-    AlertIOS,
-		Navigator,
-		MainView,
-		ScrollView,
-		TouchableOpacity,
-		ListView,
-		NavigatorIOS,
-		Image
+  AppRegistry,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  NavigatorIOS,
+  TouchableHighlight,
+	TouchableOpacity,
+	AsyncStorage,
+	ListView,
 } from 'react-native';
 
 
 
-
-
-import ProductView from './ProductView';
-
+import SearchBar from './SearchBar';
 
 
 
+export default class CategoryView extends Component {
 
-var base_url = 'http://rp-backend.herokuapp.com/api/';
-var get_products = 'bcs/products/?format=json&gps_id=';
-
-
-export default class ProductPage extends Component {
-
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-		 dataSource: new ListView.DataSource({
-        rowHasChanged: (row1, row2) => row1 !== row2,
-			}),
-		 message: '',
-
-	
-    }
-  }
-
-
-	
-
-
-  componentDidMount() {
-		this._get(base_url + get_products + this.props.gpsID);
-		this.props._hideNav();
 		
+	constructor(props){
+		super(props);
+	
+		this.state = ({
+			products: this.props.products,
+			cid: this.props.cid,
+			dataSource: new ListView.DataSource({
+				rowHasChanged: (row1, row2) => row1 !== row2}),
+		});
+			
+			
+		
+		}
+	
+	componentDidMount(){
+
+		this._initProducts(this.state.cid);
 	}
 	
 	
-
 	
-
-
-   _searchProducts(){
+	
+	
+	
+	
+	
+	
+	
+	_initProducts(cid){
+	
+	
+	
+		var products = this.state.products;
 		
-		var products = Products.filter(function (product) {
-			return (product.kw).indexOf(text) > -1 ?  true : false;
-		}).map(function (product) {
-			return product.name;
-		});
-			this.setState({data: products});
-    }
-	
-	
-
-  _get(url) {
-		console.log(url);
-		fetch(url)
-		.then(response => response.json())
-		.then((responseData) => {
-			this.setState({
-				dataSource: this.state.dataSource.cloneWithRows(responseData)
-			});
-			this.props._setProducts(responseData);
-		})
-		.catch(error =>
-			this.setState({
-				message: 'Something bad happened ' + error
-		}));
-
-  }
-	
-	
-	
-	
-	
-	_productRowPressed(product){
 		
-		this.props.navigator.push({
-			component: ProductView,
-			passProps: {
-				product: product,
-				hideNav: this.props.hideNav,
-				_hideNav: this.props._hideNav,
-			},
+		var result = products.find(x=>x.category.id.includes(cid));
+	
+		
+		
+		
+		this.setState({
+			dataSource: this.state.dataSource.cloneWithRows(result)
 		});
+		
+	
+	
 	}
+	
+	
+	
 	
 	
 	_renderProduct(product) {
@@ -157,40 +124,54 @@ export default class ProductPage extends Component {
 	}
 
 
-
-
-
-	render() {
+	
+	
+	
+	
+	
+	
+	
+	
+	render(){
+	
 		
 		
 		
-    return (
+		return(
+		
 			<View style={styles.container}>
+			
+			
+	
 			
 				<ListView
 					dataSource={this.state.dataSource}
 					renderRow={this._renderProduct.bind(this)}
 					style={styles_list.listView}
        />
-				
 			</View>
-
 		
-    );
-  }
+		
+		);
+	
+	}
+	
+
+
 }
-
-
 
 
 
 var styles = StyleSheet.create({
 	container: {
-		flex : 1,
-	},
-
+		flex: 1,
+	}
 
 });
+
+
+
+
 
 var styles_list = StyleSheet.create({
   container: {
@@ -252,3 +233,6 @@ var styles_list = StyleSheet.create({
 		flex: 1,
 	},
 });
+
+
+
