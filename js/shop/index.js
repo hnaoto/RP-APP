@@ -109,6 +109,8 @@ export default class ShopView extends Component {
 			title: '商品分类',
 			passProps: {
 				products: this.state.products,
+				_productRowPressed: this._productRowPressed,
+				navigator: this.props.navigator,
 			
 			}
 			//navigationBarHidden: true,
@@ -118,6 +120,7 @@ export default class ShopView extends Component {
 	}
 	
 	
+
 	
 
   render() {

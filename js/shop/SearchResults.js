@@ -17,8 +17,7 @@ import {
 
 
 import SearchBar from './SearchBar';
-
-
+import ProductView from './ProductView';
 
 export default class SearchResults extends Component {
 
@@ -88,6 +87,20 @@ export default class SearchResults extends Component {
 	}
 	
 	
+	
+	
+		_productRowPressed(product){
+		
+		this.props.navigator.push({
+			component: ProductView,
+			passProps: {
+				product: product,
+				hideNav: this.props.hideNav,
+				_hideNav: this.props._hideNav,
+				navigator:this.props.navigator,
+			},
+		});
+	}
 	
 	
 	

@@ -36,6 +36,7 @@ export default class Orders extends Component {
 			dataSource: new ListView.DataSource({
         rowHasChanged: (row1, row2) => row1 !== row2,
 			}),
+			loaded: false,
 		
 		});
 		
@@ -74,6 +75,7 @@ export default class Orders extends Component {
 				console.log(responseData);
 				this.setState({
 					dataSource: this.state.dataSource.cloneWithRows(responseData),
+					loaded: true,
 				});
 			}
 		)

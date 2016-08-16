@@ -143,7 +143,7 @@ export default class Account extends Component {
 
 	render() {
 
-	
+		/**
 		var header = this.state.loggedIn ?
 								(<Header
 									TOKEN={this.state.TOKEN}
@@ -158,6 +158,11 @@ export default class Account extends Component {
 									_profileOnPress={this._login.bind(this)} />
 								);
 		
+		**/
+		
+
+		
+		
 		return(
 		
 			
@@ -168,7 +173,7 @@ export default class Account extends Component {
 					
 				<TouchableOpacity
 					style={styles.ordersButton}
-					onPress={ () => this._orderOnPress()} >
+					onPress={ () => { this.state.loggedIn ?  this._orderOnPress() : this._login() } } >
 					<Text style={styles.ordersText}>查看所有订单</Text>
 				</TouchableOpacity>
 				

@@ -104,7 +104,8 @@ export default class Category extends Component {
 			passProps: {
 				products: this.props.products,
 				cid: cid,
-			
+				_productRowPressed: this.props._productRowPressed,
+				navigator: this.props.navigator,
 			}
 		});
 	
@@ -132,6 +133,7 @@ export default class Category extends Component {
 	render() {
 		
 		return(
+		
 			<View style={styles.container}>
 				<ListView
 					dataSource={this.state.dataSource}
@@ -172,12 +174,12 @@ var styles_list = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     backgroundColor: '#FFFF',
-		padding: 12,
+		padding: 13,
 		borderBottomWidth: 1,
 		borderBottomColor:'#EEE',
   },
 	name: {
-		fontSize: 15,
+		fontSize: 17,
 	
 	},
 	

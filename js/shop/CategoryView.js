@@ -18,6 +18,7 @@ import {
 
 import SearchBar from './SearchBar';
 
+import ProductView from './ProductView';
 
 
 export default class CategoryView extends Component {
@@ -31,6 +32,7 @@ export default class CategoryView extends Component {
 			cid: this.props.cid,
 			dataSource: new ListView.DataSource({
 				rowHasChanged: (row1, row2) => row1 !== row2}),
+			  empty: false,
 		});
 			
 			
@@ -56,22 +58,40 @@ export default class CategoryView extends Component {
 	
 	
 		var products = this.state.products;
+
 		
 		
-		var result = products.find(x=>x.category.id.includes(cid));
+		
+		var result = products.filter(x=>x.basic_info.category.includes(cid));
+		
 	
 		
-		
-		
-		this.setState({
-			dataSource: this.state.dataSource.cloneWithRows(result)
-		});
-		
+		if (result.length > 0) {
+	
+			this.setState({
+				dataSource: this.state.dataSource.cloneWithRows(result),
+				empty: true,
+			});
+	
+		}
 	
 	
 	}
 	
 	
+	
+		_productRowPressed(product){
+		
+		this.props.navigator.push({
+			component: ProductView,
+			passProps: {
+				product: product,
+				hideNav: this.props.hideNav,
+				_hideNav: this.props._hideNav,
+				navigator:this.props.navigator,
+			},
+		});
+	}
 	
 	
 	
@@ -126,7 +146,15 @@ export default class CategoryView extends Component {
 
 	
 	
-	
+  _renderEmptyView() {
+    return (
+      <View style={styles.container}>
+        <Text>
+          暂无商品
+        </Text>
+      </View>
+    );
+  }
 	
 	
 	
@@ -134,6 +162,9 @@ export default class CategoryView extends Component {
 	
 	render(){
 	
+    if (!this.state.empty) {
+      return this._renderEmptyView();
+    }
 		
 		
 		
@@ -145,6 +176,7 @@ export default class CategoryView extends Component {
 	
 			
 				<ListView
+					enableEmptySections={true}
 					dataSource={this.state.dataSource}
 					renderRow={this._renderProduct.bind(this)}
 					style={styles_list.listView}
@@ -165,6 +197,8 @@ export default class CategoryView extends Component {
 var styles = StyleSheet.create({
 	container: {
 		flex: 1,
+		flexDirection: 'column',
+		marginTop: 70,
 	}
 
 });

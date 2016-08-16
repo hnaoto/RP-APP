@@ -167,7 +167,7 @@ export default class Cart extends React.Component {
 		
 	_incrementPress(product, rowID) {
 	
-
+		
 		this._updateProduct(product, rowID, true);
 		
 	}
@@ -178,27 +178,61 @@ export default class Cart extends React.Component {
 	}
 	
 	
+	_toFixed( number, precision ) {
+    var multiplier = Math.pow( 10, precision );
+    return Math.round( number * multiplier ) / multiplier;
+	}
+	
 	async _updateProduct(product, rowID, increment){
 		var diff = increment ? 1 : (-1);
 		
 			try{
+			
 			var value = await AsyncStorage.getItem('BC-P-ID' + product.id);
 			if (value !== null){
+			
 				var tp = JSON.parse(value).cart_count;
+				
+				if ( tp + diff >= 0 && tp + diff  <= product.number_in_stock){
+				
+				
 				let updatedProduct = { cart_count : tp + diff};
-				await AsyncStorage.mergeItem('BC-P-ID' + product.id, JSON.stringify(updatedProduct));
+				
+				
+			  if (tp + diff  == 0 ){
+					await AsyncStorage.removeItem('BC-P-ID' + product.id);
+				} else {
+					await AsyncStorage.mergeItem('BC-P-ID' + product.id, JSON.stringify(updatedProduct));
+				}
 
 				
-				var _ds = this.state.products.slice();
-				_ds[rowID].cart_count = product.cart_count + diff;
 				
-				var _subtotal = this.state.subtotal + diff * product.price;
 				
-				this.setState({
-					dataSource: this.state.dataSource.cloneWithRows(_ds),
-					products: _ds,
-					subtotal: _subtotal,
-				});
+				var _products = this.state.products.slice();
+			
+				_products[rowID].cart_count = product.cart_count + diff;
+				
+				
+				var _ds = (tp + diff  == 0 ) ?   _products.splice(rowID, 1) : _products;
+				
+				
+				var _ds = _products;
+
+				var _subtotal = this._toFixed(this.state.subtotal + diff * product.price , 2);
+				
+			
+				
+					this.setState({
+						dataSource: this.state.dataSource.cloneWithRows(_ds),
+						products: _products,
+						subtotal: _subtotal,
+					});
+				}
+				
+				
+				
+
+				
 			
 			}
 			
@@ -297,11 +331,12 @@ export default class Cart extends React.Component {
 			
       <View style={styles_list.mainContainer}>
         <Image
-          source={ require('../shop/images/product/none.jpg')}
+          source={{uri: product.basic_info.picture_backup}}
           style={styles_list.thumbnail}
         />
 					<View style={styles_list.rightContainer}>
 					<View style={styles_list.titleContainer}>
+					
 						<Text style={styles_list.name}>
 							{product.basic_info.name} {product.basic_info.size}
 						</Text>
@@ -447,7 +482,7 @@ var styles_list = StyleSheet.create({
     fontSize: 16,
 		fontWeight: '600',
 		color: '#B23009',
-		textAlign: 'right',
+		textAlign: 'left',
 	},
   thumbnail: {
     width: 127,
@@ -456,7 +491,7 @@ var styles_list = StyleSheet.create({
   },
 
 	titleContainer: {
-		flexDirection: 'row',
+		flexDirection: 'column',
 		flex: 1,
 	},
 	rating: {

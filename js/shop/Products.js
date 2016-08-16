@@ -14,7 +14,8 @@ import {
 		TouchableOpacity,
 		ListView,
 		NavigatorIOS,
-		Image
+		Image,
+		ActivityIndicator,
 } from 'react-native';
 
 
@@ -22,9 +23,6 @@ import {
 
 
 import ProductView from './ProductView';
-
-
-
 
 
 var base_url = 'http://rp-backend.herokuapp.com/api/';
@@ -42,6 +40,8 @@ export default class ProductPage extends Component {
         rowHasChanged: (row1, row2) => row1 !== row2,
 			}),
 		 message: '',
+		 loaded: false,
+		 error: false,
 
 	
     }
@@ -52,14 +52,38 @@ export default class ProductPage extends Component {
 
 
   componentDidMount() {
-		this._get(base_url + get_products + this.props.gpsID);
+		var _this = this;
+	
+		this._timeoutPromise(5000, fetch(base_url + get_products + this.props.gpsID))
+		//.then(function(response) {
+		.then(response => response.json())
+		.then((responseData) => {
+			this.setState({
+				dataSource: this.state.dataSource.cloneWithRows(responseData),
+				loaded: true,
+			});
+			this.props._setProducts(responseData);
+		})
+		.catch(function(error) {
+			console.log('error');
+		
+		
+			_this.setState({
+				message: '服务器超时，请重试',
+				error: true,
+				loaded: true,
+			});
+
+		
+		});
+	
 		this.props._hideNav();
 		
 	}
 	
 	
-
 	
+
 
 
    _searchProducts(){
@@ -74,22 +98,36 @@ export default class ProductPage extends Component {
 	
 	
 
-  _get(url) {
-		console.log(url);
+  _getProducts(url) {
 		fetch(url)
 		.then(response => response.json())
 		.then((responseData) => {
+			console.log(responseData);
 			this.setState({
-				dataSource: this.state.dataSource.cloneWithRows(responseData)
+				dataSource: this.state.dataSource.cloneWithRows(responseData),
+				loaded: true,
 			});
 			this.props._setProducts(responseData);
 		})
 		.catch(error =>
 			this.setState({
-				message: 'Something bad happened ' + error
+				message: '服务器故障，请重试',
+				error: true,
 		}));
 
   }
+	
+	
+	
+
+ _timeoutPromise(ms, promise) {
+  return new Promise(function(resolve, reject) {
+    setTimeout(function() {
+      reject(new Error("timeout"))
+    }, ms)
+    promise.then(resolve, reject)
+  })
+}
 	
 	
 	
@@ -157,12 +195,44 @@ export default class ProductPage extends Component {
 	}
 
 
+	_renderLoadingView() {
+		return (
+			<View style={styles.container}>
+				<View style={styles.loadingContainer}>
+					<ActivityIndicator size='large'/>
+					<Text style={styles.loadingText}> 加载商品中，请稍候..</Text>
+
+				</View>
+			
+			
+		
+			</View>
+		
+		
+		);
+	}
 
 
+	_renderErrorView() {
+		console.log('errorr');
+		return (
+			<View style={styles.container}>
+					<Text style={styles.loadingText}> {this.state.message}</Text>
+			</View>
+		
+		
+		);
+	}
 
 	render() {
 		
+		if (this.state.erroe) {
+			return this._renderErrorView();
+		}		
 		
+		if (!this.state.loaded) {
+			return this._renderLoadingView();
+		}
 		
     return (
 			<View style={styles.container}>
@@ -187,6 +257,18 @@ export default class ProductPage extends Component {
 var styles = StyleSheet.create({
 	container: {
 		flex : 1,
+		justifyContent: 'center',
+	},
+	loadingContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+	
+	},
+	loadingText: {
+		fontSize: 18,
+		color: '#666',
+	
 	},
 
 
@@ -248,7 +330,9 @@ var styles_list = StyleSheet.create({
 		fontSize: 12,
 		fontWeight: '900',
 	},
+
 	listView: {
 		flex: 1,
 	},
+	
 });
