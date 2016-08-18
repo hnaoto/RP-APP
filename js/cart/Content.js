@@ -13,7 +13,8 @@ import {
   ListView,
   Image,
 	AsyncStorage,
-	ScrollView
+	ScrollView,
+	Alert,
 } from 'react-native';
 
 
@@ -47,6 +48,7 @@ export default class Cart extends React.Component {
 			},
 			address: [],
 			customerDetail: {},
+			count: 0,
 		}
 		
 	}
@@ -68,6 +70,7 @@ export default class Cart extends React.Component {
 		async _loadInitialSate() {
 			var _this = this;
 			var subtotal = 0;
+			var count = 0;
 			try {
 			
 				//get customer detail
@@ -101,6 +104,8 @@ export default class Cart extends React.Component {
 										let value = JSON.parse(result[i][1]);
                     arr.push(value);
 										subtotal += (value.price * value.cart_count);
+										count += value.cart_count;
+										
                 }
 								console.log(arr);
 								
@@ -109,6 +114,7 @@ export default class Cart extends React.Component {
 										dataSource: _this.state.dataSource.cloneWithRows(arr),
 										subtotal: subtotal,
 										productKeys: SP_keys,
+										count: count,
                 });
             });
 				
@@ -276,6 +282,10 @@ export default class Cart extends React.Component {
 			this.props.navigator.push({
 				component: LoginView,
 				title: '用户登录/注册',
+				passProps: {
+					_clearCart: this._clearCart.bind(this),
+				
+				}
 			});
 		
 		} else{
@@ -290,6 +300,8 @@ export default class Cart extends React.Component {
 					products: this.state.products,
 					customerDetail: this.state.customerDetail,
 					subtotal: this.state.subtotal,
+					count: this.state.count,
+					_clearCart: this._clearCart.bind(this),
 					
 				}
 			})
@@ -325,7 +337,7 @@ export default class Cart extends React.Component {
 			
 			<View style={styles_list.shopContainer}>
 				<Text style={styles_list.shopText}>
-					xxxxx店名
+				
 				</Text>
 			</View>
 			
@@ -411,7 +423,6 @@ export default class Cart extends React.Component {
 			
 			cartPanel = (<CartPanel
 										subtotal={this.state.subtotal}
-										_clearCart={this._clearCart.bind(this)}
 										_placeOrder={this._placeOrder.bind(this)}/>);
 	
 	

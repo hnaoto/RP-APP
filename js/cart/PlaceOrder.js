@@ -14,6 +14,7 @@ import {
 	AsyncStorage,
 	ListView,
 	ScrollView,
+	Alert,
 } from 'react-native';
 
 
@@ -41,6 +42,7 @@ export default class PlaceOrder extends Component {
 			receiverInfo: '',
 			count: 0,
 			subtotal: 0,
+			message:'订单创建成功',
 		});
 		
 
@@ -48,9 +50,11 @@ export default class PlaceOrder extends Component {
 
 	componentDidMount() {
 		this._initLoad();
+		
 		this.setState({
 			products:this.props.products,
 			subtotal: this.props.subtotal,
+			count: this.props.count,
 		
 		
 		});
@@ -192,17 +196,29 @@ export default class PlaceOrder extends Component {
 			{
 				response.json()
 				if (response.status == 201) {
+					this.props._clearCart();
+					this.props.navigator.pop();
+
 					console.log('ok');
 				}
 			}
 		
 		)
-		.catch(error =>
+		.catch(error => {
 			this.setState({
-				message: '系统故障，请稍后重试' + error
-		}));
+				message: '系统故障，请稍后重试' + error.message
+		})});
 		
 		
+		Alert.alert(
+			null,
+			this.state.message,
+		[
+		 {text: '确定', onPress: () => console.log('Cancel Pressed'), style: 'cancel'}
+		]
+		);
+	
+	
 	
 	}
 	
@@ -334,7 +350,7 @@ export default class PlaceOrder extends Component {
 				
 				<View style={styles.cell}>
 					<Text style={styles.orderText}>商品总价  ¥ {this.state.subtotal} </Text>
-					<Text style={styles.orderText}>运费  ¥ </Text>
+					<Text style={styles.orderText}>运费  ¥ 0 </Text>
 				</View>
 						
 						
@@ -344,7 +360,8 @@ export default class PlaceOrder extends Component {
 				
 				
 				<OrderPanel
-					_createOrder={this._createOrder.bind(this)}/>
+					_createOrder={this._createOrder.bind(this)}
+					subtotal = { this.state.subtotal }/>
 				
 				
 	

@@ -98,6 +98,7 @@ export default class Account extends Component {
 				this.setState({
 					TOKEN: value,
 					loggedIn: true,
+					username: window.customerDetail.user.username,
 				});
 				window.TOKEN = value;
 				

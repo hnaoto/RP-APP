@@ -14,6 +14,7 @@ import {
 	TouchableOpacity,
 	AsyncStorage,
 	ListView,
+	Platform,
 } from 'react-native';
 
 
@@ -249,8 +250,13 @@ export default class Orders extends Component {
 
 	render(){
 		return(
+		
+		
 			<View style={styles.container}>
-			
+				<View style={styles.titleContainer}>
+					<Text style={styles.title}>  全部订单 </Text>
+				</View>
+				
 				<ListView
 					dataSource={this.state.dataSource}
 					renderRow={this._renderOrder.bind(this)}
@@ -275,6 +281,26 @@ var styles = StyleSheet.create({
 		flex : 1,
 		backgroundColor: '#F8F8F8',
 	},
+	titleContainer: {
+		flexDirection: 'row',
+		paddingLeft: 10,
+		paddingRight: 10,
+		paddingTop: Platform.OS === 'ios' ? 20 : 0,
+
+		backgroundColor: '#FFF',
+		alignItems: 'center',
+		borderBottomWidth: 1,
+		borderBottomColor: '#DDD',
+		
+		justifyContent: 'center',
+
+	},
+	title: {
+		textAlign: 'center',
+		color: '#555',
+		fontSize: 20,
+		paddingBottom: 10,
+	}
 
 
 });
